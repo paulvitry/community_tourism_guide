@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, {  } from 'react';
 import { StyleSheet, Text, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
