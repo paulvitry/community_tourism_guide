@@ -116,3 +116,6 @@ web-build/
 
 # TernJS port file
 .tern-port
+
+# Firebase
+config.*

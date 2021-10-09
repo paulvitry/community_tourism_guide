@@ -1,13 +1,21 @@
-import {  } from 'expo-status-bar';
+import {} from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Navigation } from './src/Navigation/Navigation';
+import { AuthenticationProvider } from './src/Contexts/AuthenticationContext';
+import { AlertProvier } from './src/Contexts/AlertContext';
+import FlashMessage from 'react-native-flash-message';
+// require('dotenv').config();
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <Navigation />
+      <AlertProvier>
+      <AuthenticationProvider>
+        <Navigation />
+        <FlashMessage position='top'/>
+      </AuthenticationProvider>
+      </AlertProvier>
     </SafeAreaProvider>
   );
 }
-
