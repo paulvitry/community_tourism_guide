@@ -17,7 +17,7 @@ import {
 } from './../interfaces/IAuthenticationContext';
 import { AlertContext } from './AlertContext';
 // import * as ImagePicker from 'expo-image-picker';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthenticationContext = createContext<IAuthenticationContext>(
   defaultAuthenticationValue,
@@ -39,8 +39,21 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       .auth()
       .signInWithEmailAndPassword(payload.email, payload.password)
       .then(async () => {
-        setUser(await getUser());
-        // console.log('Aliert :', tmpuser);
+        const newUser = await getUser();
+        setUser({
+          firstname: newUser.displayName,
+          email: newUser.email,
+          picture: newUser.photoURL,
+        });
+        await AsyncStorage.setItem(
+          'user',
+          JSON.stringify({
+            email: newUser.email,
+            password: payload.password,
+            firstname: newUser.displayName,
+            picture: newUser.photoURL,
+          }),
+        );
         Alerts.success({
           title: 'Successful authentication',
           message: 'Welcome back !',
@@ -57,16 +70,15 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       });
   };
 
-  // const autolog = async () => {
-  //   const tmpUser = await AsyncStorage.getItem('user');
-
-  //   if (tmpUser !== null) {
-  //     await login({
-  //       email: JSON.parse(tmpUser!).email,
-  //       password: JSON.parse(tmpUser!).password,
-  //     });
-  //   }
-  // };
+  const autolog = async () => {
+    const tmpUser = await AsyncStorage.getItem('user');
+    if (tmpUser !== null) {
+      await login({
+        email: JSON.parse(tmpUser!).email,
+        password: JSON.parse(tmpUser!).password,
+      });
+    }
+  };
 
   const register: TRegisterFC = async (payload: IAuth) => {
     await firebase
@@ -160,7 +172,7 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       value={{
         user: user,
 
-        // autolog,
+        autolog,
         login,
         register,
         logout,

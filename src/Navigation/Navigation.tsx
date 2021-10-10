@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,7 +27,13 @@ export type NavigationProps<T extends keyof NavigationParamList> = {
 const Stack = createNativeStackNavigator<NavigationParamList>();
 
 export const Navigation: React.FC<INavigationProps> = () => {
-  const { user } = useContext(AuthenticationContext);
+  const { user, autolog } = useContext(AuthenticationContext);
+
+  useEffect(() => {
+    (async () => {
+      await autolog();
+    })();
+  }, []);
 
   return (
     <NavigationContainer>
