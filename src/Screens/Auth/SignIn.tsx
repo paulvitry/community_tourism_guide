@@ -1,5 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, Button } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Button,
+  View,
+  TextInput,
+  TouchableHighlight,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { NavigationProps } from '../../Navigation/Navigation';
@@ -14,17 +22,68 @@ type ISignInProps = NavigationProps<'SignIn'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
-  text: {
-    textAlign: 'center',
+  header: {
+    width: '100%',
+    flex: 0.1,
+    borderBottomWidth: 1,
+    borderColor: 'grey',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  content: {
+    flex: 0.7,
+    padding: '5%',
     justifyContent: 'center',
-    backgroundColor: 'red',
+  },
+  footer: {
+    flex: 0.2,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    width: '90%',
+    fontSize: 32,
+    fontWeight: 'bold',
+  },
+  textInput: {
+    backgroundColor: '#D4D4D4',
+    height: 60,
+    marginBottom: 10,
+    fontSize: 14,
+    padding: 10,
+  },
+  signUp: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  forgottenPassword: {
+    fontSize: 12,
+    alignItems: 'flex-end',
+  },
+  forgottenPasswordText: {
+    color: 'blue',
+  },
+  actionButton: {
+    width: '90%',
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: 'white',
+    fontSize: 24,
   },
 });
 
 export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
   const { login } = useContext(AuthenticationContext);
+  const [setEmail] = useState<string>(null);
+  const [setPassword] = useState<string>(null);
   const [values] = useState<IAuth>({
     email: 'community-tourism@yopmail.com',
     password: 'password',
@@ -36,15 +95,48 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Text>SignIn</Text>
-      <Button title="Email password signIn" onPress={onClick} />
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>SignIn</Text>
+      </View>
 
-      <Button title="sign up" onPress={() => navigation.navigate('SignUp')} />
+      <View style={styles.content}>
+        <KeyboardAvoidingView>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter your email"
+            onTextChange={setEmail}
+            keyboardType="email-address"
+          />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Enter your password"
+            onTextChange={setPassword}
+            secureTextEntry
+          />
 
-      <Button
-        title="forgotten password"
-        onPress={() => navigation.push('ResetPassword')}
-      />
+          <TouchableHighlight
+            underlayColor="#DDDDDD"
+            style={styles.forgottenPassword}
+            onPress={() => navigation.push('ResetPassword')}
+          >
+            <Text style={styles.forgottenPasswordText}>
+              Forgotten password?
+            </Text>
+          </TouchableHighlight>
+        </KeyboardAvoidingView>
+      </View>
+      <View style={styles.footer}>
+        <View style={styles.signUp}>
+          <Text>No account yet?</Text>
+          <Button
+            title="Sign up!"
+            onPress={() => navigation.navigate('SignUp')}
+          />
+        </View>
+        <TouchableHighlight style={styles.actionButton} onPress={onClick}>
+          <Text style={styles.actionButtonText}>Sign In</Text>
+        </TouchableHighlight>
+      </View>
     </SafeAreaView>
   );
 };

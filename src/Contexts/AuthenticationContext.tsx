@@ -9,11 +9,11 @@ import {
   TLoginFC,
   TLogoutFC,
   TRegisterFC,
-  // TResetPasswordFC,
+  TResetPasswordFC,
   // TTakePictureFC,
   // TUploadPictureFC,
   IAuth,
-  // IReset,
+  IReset,
 } from './../interfaces/IAuthenticationContext';
 import { AlertContext } from './AlertContext';
 // import * as ImagePicker from 'expo-image-picker';
@@ -137,23 +137,23 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
 
   // };
 
-  // const resetpassword: TResetPasswordFC = async (payload: IReset) => {
-  //   await firebase
-  //     .auth()
-  //     .sendPasswordResetEmail(payload.email)
-  //     .then(() => {
-  //       Alerts.success({
-  //         title: 'Email succesfully sent',
-  //         message: 'Open your recent mail to reset your password',
-  //       });
-  //     })
-  //     .catch(error => {
-  //       Alerts.warning({
-  //         title: error.message,
-  //         message: '',
-  //       });
-  //     });
-  // };
+  const resetpassword: TResetPasswordFC = async (payload: IReset) => {
+    await firebase
+      .auth()
+      .sendPasswordResetEmail(payload.email)
+      .then(() => {
+        Alerts.success({
+          title: 'Email succesfully sent',
+          message: 'Open your recent mail to reset your password',
+        });
+      })
+      .catch(error => {
+        Alerts.warning({
+          title: error.message,
+          message: '',
+        });
+      });
+  };
 
   return (
     <AuthenticationContext.Provider
@@ -164,7 +164,7 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
         login,
         register,
         logout,
-        // resetpassword,
+        resetpassword,
         // uploadpicture,
         // takepicture,
         getUser,
