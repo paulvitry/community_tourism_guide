@@ -40,7 +40,7 @@ export const Home: React.FC<IHomeProps> = ({}) => {
 
   const onClickCreateSpot = () => {
     console.log('create new spot');
-    
+
   };
 
   const onClick = async () => {
@@ -53,6 +53,11 @@ export const Home: React.FC<IHomeProps> = ({}) => {
         style={styles.map}
         customMapStyle={NightMode}
         provider={PROVIDER_GOOGLE}
+        userInterfaceStyle='dark'
+        showsUserLocation={true}
+        showsScale={true}
+        showsCompass={true}
+        showsMyLocationButton={true}
       >
         {markers.map((marker, index) => (
           <Marker
