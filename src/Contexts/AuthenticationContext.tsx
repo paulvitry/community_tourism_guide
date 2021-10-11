@@ -40,7 +40,9 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       .signInWithEmailAndPassword(payload.email, payload.password)
       .then(async () => {
         const newUser = await getUser();
+        console.log(newUser);
         setUser({
+          id: newUser.uid,
           firstname: newUser.displayName,
           email: newUser.email,
           picture: newUser.photoURL,

@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    height: 40,
   },
 
   actionButton: {
@@ -98,7 +99,7 @@ export const ResetPassword: React.FC<IResetPasswordProps> = ({
           <TextInput
             style={styles.textInput}
             placeholder="Enter your email"
-            onTextChange={setEmail}
+            onChangeText={setEmail}
             keyboardType="email-address"
           />
         </KeyboardAvoidingView>

@@ -9,6 +9,7 @@ import { SignIn } from '../Screens/Auth/SignIn';
 import { SignUp } from '../Screens/Auth/SignUp';
 import { ResetPassword } from '../Screens/Auth/ResetPassword';
 import { Home } from '../Screens/App/Home';
+import { CreatePlace } from '../Screens/App/CreatePlace';
 
 interface INavigationProps {}
 
@@ -17,6 +18,7 @@ type NavigationParamList = {
   SignUp: React.FC;
   ResetPassword: React.FC;
   Home: React.FC;
+  CreatePlace: React.FC;
 };
 
 export type NavigationProps<T extends keyof NavigationParamList> = {
@@ -45,6 +47,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           }}
         >
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="CreatePlace" component={CreatePlace} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator

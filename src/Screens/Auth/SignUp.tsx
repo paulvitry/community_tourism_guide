@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    height: 40,
   },
 
   actionButton: {
@@ -99,13 +100,13 @@ export const SignUp: React.FC<ISignUpProps> = ({ navigation }) => {
           <TextInput
             style={styles.textInput}
             placeholder="Enter your email"
-            onTextChange={setEmail}
+            onChangeText={setEmail}
             keyboardType="email-address"
           />
           <TextInput
             style={styles.textInput}
             placeholder="Enter your password"
-            onTextChange={setPassword}
+            onChangeText={setPassword}
             secureTextEntry
           />
         </KeyboardAvoidingView>

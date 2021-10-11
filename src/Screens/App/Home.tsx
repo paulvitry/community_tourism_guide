@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Button, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { NightMode } from './../../styling/map/NightMode';
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
+import firebase from '../../database/firebase';
 
-console.log(NightMode);
 type IHomeProps = NavigationProps<'Home'>;
 
 const styles = StyleSheet.create({
@@ -28,19 +28,26 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Home: React.FC<IHomeProps> = ({}) => {
+export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { logout } = useContext(AuthenticationContext);
-  const [markers] = useState([
-    {
-      latlng: { latitude: 48.864716, longitude: 2.349014 },
-      title: 'paris',
-      description: 'description',
-    },
-  ]);
+
+  const [markers, setMarkers] = useState<Array<any>>();
+
+  const fetchPlaces = async () => {
+    console.log('fetch places');
+    const tmpMarkers = (
+      await firebase.firestore().collection('Places').get()
+    ).docs.map(doc => doc.data());
+    setMarkers(tmpMarkers);
+  };
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
 
   const onClickCreateSpot = () => {
     console.log('create new spot');
-
+    navigation.navigate('CreatePlace');
   };
 
   const onClick = async () => {
@@ -53,16 +60,21 @@ export const Home: React.FC<IHomeProps> = ({}) => {
         style={styles.map}
         customMapStyle={NightMode}
         provider={PROVIDER_GOOGLE}
-        userInterfaceStyle='dark'
+        userInterfaceStyle="dark"
         showsUserLocation={true}
         showsScale={true}
         showsCompass={true}
         showsMyLocationButton={true}
+        onLongPress={e => {
+          navigation.navigate('CreatePlace', {
+            coordinate: e.nativeEvent.coordinate,
+          });
+        }}
       >
-        {markers.map((marker, index) => (
+        {markers?.map((marker, index) => (
           <Marker
             key={index}
-            coordinate={marker.latlng}
+            coordinate={marker.coordinate}
             title={marker.title}
             description={marker.description}
           />

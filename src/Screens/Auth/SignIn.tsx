@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    height: 40,
   },
   forgottenPassword: {
     fontSize: 12,
@@ -104,13 +105,13 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
           <TextInput
             style={styles.textInput}
             placeholder="Enter your email"
-            onTextChange={setEmail}
+            onChangeText={setEmail}
             keyboardType="email-address"
           />
           <TextInput
             style={styles.textInput}
             placeholder="Enter your password"
-            onTextChange={setPassword}
+            onChangeText={setPassword}
             secureTextEntry
           />
 
