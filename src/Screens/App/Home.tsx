@@ -54,6 +54,10 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     await logout();
   };
 
+  const onClickProfile = async () => {
+    navigation.navigate('Profile');
+  };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -89,6 +93,7 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
         <Text>Home</Text>
         <Button title="logout" onPress={onClick} />
         <Button title="Create new spot!" onPress={onClickCreateSpot} />
+        <Button title="profile" onPress={onClickProfile} />
       </SafeAreaView>
     </View>
   );

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AuthenticationContext } from '../Contexts/AuthenticationContext';
@@ -9,6 +10,7 @@ import { SignIn } from '../Screens/Auth/SignIn';
 import { SignUp } from '../Screens/Auth/SignUp';
 import { ResetPassword } from '../Screens/Auth/ResetPassword';
 import { Home } from '../Screens/App/Home';
+import { Profile } from '../Screens/App/Profile';
 import { CreatePlace } from '../Screens/App/CreatePlace';
 
 interface INavigationProps {}
@@ -18,7 +20,14 @@ type NavigationParamList = {
   SignUp: React.FC;
   ResetPassword: React.FC;
   Home: React.FC;
+  Profile: React.FC;
   CreatePlace: React.FC;
+  
+};
+
+type TabParamList = {
+  Home: React.FC;
+  Profile: React.FC;
 };
 
 export type NavigationProps<T extends keyof NavigationParamList> = {
@@ -27,6 +36,8 @@ export type NavigationProps<T extends keyof NavigationParamList> = {
 };
 
 const Stack = createNativeStackNavigator<NavigationParamList>();
+// const Tab = createBottomTabNavigator<TabParamList>();
+// const HomeStack = createNativeStackNavigator<>();
 
 export const Navigation: React.FC<INavigationProps> = () => {
   const { user, autolog } = useContext(AuthenticationContext);
@@ -40,6 +51,15 @@ export const Navigation: React.FC<INavigationProps> = () => {
   return (
     <NavigationContainer>
       {user ? (
+        // <Tab.Navigator
+        //   initialRouteName="Home"
+        //   screenOptions={{
+        //     header: () => null,
+        //   }}
+        // >
+        //   <Tab.Screen name="Home" component={Home} />
+        //   <Tab.Screen name="Profile" component={Profile} />
+        // </Tab.Navigator>
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={{
@@ -47,9 +67,19 @@ export const Navigation: React.FC<INavigationProps> = () => {
           }}
         >
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="CreatePlace" component={CreatePlace} />
         </Stack.Navigator>
       ) : (
+        // <Stack.Navigator
+        //   initialRouteName="Home"
+        //   screenOptions={{
+        //     header: () => null,
+        //   }}
+        // >
+        //   <Stack.Screen name="Home" component={Home} />
+        //   <Stack.Screen name="CreatePlace" component={CreatePlace} />
+        // </Stack.Navigator>
         <Stack.Navigator
           initialRouteName="SignIn"
           screenOptions={{

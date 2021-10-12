@@ -119,41 +119,8 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   }, []);
 
   const onClick = async () => {
-    console.log('publish');
-    // await setForm({
-    //   ...form,
-    //   coordinate: route.params.coordinate,
-    //   creator: user.id,
-    // });
     await createPlace(form);
     await getPlaces();
-    // const path = form.uri.split('/')[form.uri.split('/').length - 1];
-
-    // const response = await fetch(form.uri);
-    // const blob = await response.blob();
-
-    // var ref = firebase
-    //   .storage()
-    //   .ref()
-    //   .child('images/' + path);
-
-    // ref.put(blob);
-
-    // const collection = await firebase.firestore().collection('Places');
-    // await collection
-    //   .doc()
-    //   .set({
-    //     creator: user.id,
-    //     title: form.title,
-    //     description: form.description,
-    //     picture: path,
-    //     coordinate: route.params.coordinate,
-    //     created_at: Date.now(),
-    //   })
-    //   .catch(e => {
-    //     consoe.log(e);
-    //   });
-
     navigation.navigate('Home');
   };
 
