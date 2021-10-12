@@ -109,28 +109,26 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
 
   const onClick = async () => {
     console.log('publish');
-    console.log(picture);
-    const response = await fetch(picture.uri)
-      .then(console.log('fetch picture OK'))
-      .catch(e => {
-        console.log(e);
-      });
+    const path = picture.uri.split('/')[picture.uri.split('/').length - 1];
+    
+    const response = await fetch(picture.uri);
     const blob = await response.blob();
-    console.log('blob = ', blob);
-    var ref = firebase.storage().ref().child(`/images/${'terrible3'}.jpg`);
-    const url = await ref.getDownloadURL();
-    console.log('url= ', url);
-    ref.put(blob);
-    console.log('image uploaded');
 
-    const collection = firebase.firestore().collection('Places');
+    var ref = firebase
+      .storage()
+      .ref()
+      .child('images/' + path);
+
+    ref.put(blob);
+
+    const collection = await firebase.firestore().collection('Places');
     await collection
       .doc()
       .set({
         creator: user.id,
         title: title,
         description: description,
-        picture: url,
+        picture: path,
         coordinate: route.params.coordinate,
         created_at: Date.now(),
       })
@@ -138,7 +136,6 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
         consoe.log(e);
       });
 
-    console.log('published');
     navigation.navigate('Home');
   };
 
@@ -174,7 +171,7 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
           onPress={onSelectMedias}
           style={{ backgroundImage: picture, backgroundColor: 'grey' }}
         >
-          <ImageBackground style={styles.imageBackground} source={ picture }>
+          <ImageBackground style={styles.imageBackground} source={picture}>
             <Text>Select photo(s)</Text>
           </ImageBackground>
         </TouchableHighlight>
