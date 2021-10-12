@@ -5,7 +5,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { NightMode } from './../../styling/map/NightMode';
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
-import firebase from '../../database/firebase';
+import { PlaceContext } from '../../Contexts/PlaceContext';
+// import firebase from '../../database/firebase';
 
 type IHomeProps = NavigationProps<'Home'>;
 
@@ -30,19 +31,17 @@ const styles = StyleSheet.create({
 
 export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { logout } = useContext(AuthenticationContext);
+  const { places, getPlaces } = useContext(PlaceContext);
+  // const [markers, setMarkers] = useState();
 
-  const [markers, setMarkers] = useState<Array<any>>();
-
-  const fetchPlaces = async () => {
-    console.log('fetch places');
-    const tmpMarkers = (
-      await firebase.firestore().collection('Places').get()
-    ).docs.map(doc => doc.data());
-    setMarkers(tmpMarkers);
+  const fetchData = async () => {
+    await getPlaces();
   };
 
   useEffect(() => {
-    fetchPlaces();
+    (async () => {
+      await fetchData();
+    })();
   }, []);
 
   const onClickCreateSpot = () => {
@@ -54,6 +53,7 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     console.log('logout');
     await logout();
   };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -71,14 +71,19 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
           });
         }}
       >
-        {markers?.map((marker, index) => (
-          <Marker
-            key={index}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
-          />
-        ))}
+        {console.log('component refreshed')}
+        {console.log('places ->', places?.length)}
+        {places?.map((marker, index) => {
+          
+          return (
+            <Marker
+              key={index}
+              coordinate={marker.coordinate}
+              title={marker.title}
+              description={marker.description}
+            />
+          );
+        })}
       </MapView>
       <SafeAreaView style={styles.overlayContainer}>
         <Text>Home</Text>

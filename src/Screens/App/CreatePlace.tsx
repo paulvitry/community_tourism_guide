@@ -11,9 +11,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { ImageContext } from './../../Contexts/ImageContext';
+import { PlaceContext } from './../../Contexts/PlaceContext';
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
+import { IPlace } from '../../interfaces/IPlaceContext';
 // import { ImageBrowser } from 'expo-image-picker-multiple';
-import firebase from '../../database/firebase';
 
 type ICreatePlaceProps = NavigationProps<'CreatePlace'>;
 // interface ICreatePlaceProps {
@@ -91,50 +92,67 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   navigation,
   route,
 }) => {
-  // const [form, setForm] = useState({ title: null, description: '', uri: '' });
-  const [title, setTitle] = useState<string>();
-  const [description, setDescription] = useState<string>();
+  const [form, setForm] = useState<IPlace>({
+    title: null,
+    description: null,
+    uri: null,
+    creator: null,
+    coordinate: null,
+  });
+  // const [title, setTitle] = useState<string>();
+  // const [description, setDescription] = useState<string>();
   const [picture, setPicture] = useState<string>(null);
   const { uploadPicture } = useContext(ImageContext);
+  const { createPlace, getPlaces } = useContext(PlaceContext);
   const { user } = useContext(AuthenticationContext);
   const onBackClick = async () => {
     navigation.navigate('Home');
   };
   const onSelectMedias = async () => {
     const res = await uploadPicture();
-    console.log('res = ', res);
     setPicture(res);
-    console.log('in select media');
+    setForm({ ...form, uri: res.uri });
   };
+
+  useEffect(() => {
+    setForm({ ...form, coordinate: route.params.coordinate, creator: user.id });
+  }, []);
 
   const onClick = async () => {
     console.log('publish');
-    const path = picture.uri.split('/')[picture.uri.split('/').length - 1];
-    
-    const response = await fetch(picture.uri);
-    const blob = await response.blob();
+    // await setForm({
+    //   ...form,
+    //   coordinate: route.params.coordinate,
+    //   creator: user.id,
+    // });
+    await createPlace(form);
+    await getPlaces();
+    // const path = form.uri.split('/')[form.uri.split('/').length - 1];
 
-    var ref = firebase
-      .storage()
-      .ref()
-      .child('images/' + path);
+    // const response = await fetch(form.uri);
+    // const blob = await response.blob();
 
-    ref.put(blob);
+    // var ref = firebase
+    //   .storage()
+    //   .ref()
+    //   .child('images/' + path);
 
-    const collection = await firebase.firestore().collection('Places');
-    await collection
-      .doc()
-      .set({
-        creator: user.id,
-        title: title,
-        description: description,
-        picture: path,
-        coordinate: route.params.coordinate,
-        created_at: Date.now(),
-      })
-      .catch(e => {
-        consoe.log(e);
-      });
+    // ref.put(blob);
+
+    // const collection = await firebase.firestore().collection('Places');
+    // await collection
+    //   .doc()
+    //   .set({
+    //     creator: user.id,
+    //     title: form.title,
+    //     description: form.description,
+    //     picture: path,
+    //     coordinate: route.params.coordinate,
+    //     created_at: Date.now(),
+    //   })
+    //   .catch(e => {
+    //     consoe.log(e);
+    //   });
 
     navigation.navigate('Home');
   };
@@ -156,20 +174,20 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
         <TextInput
           style={styles.textInput}
           placeholder="Enter the title of the place"
-          onChangeText={setTitle}
+          onChangeText={value => setForm({ ...form, title: value })}
           keyboardType="default"
         />
 
         <TextInput
           style={styles.textInput}
           placeholder="Enter the description of the place"
-          onChangeText={setDescription}
+          onChangeText={value => setForm({ ...form, description: value })}
           keyboardType="default"
         />
 
         <TouchableHighlight
           onPress={onSelectMedias}
-          style={{ backgroundImage: picture, backgroundColor: 'grey' }}
+          style={{ backgroundColor: 'grey' }}
         >
           <ImageBackground style={styles.imageBackground} source={picture}>
             <Text>Select photo(s)</Text>
