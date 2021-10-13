@@ -4,9 +4,11 @@ import {
   IImageContext,
   TTakePictureFC,
   TUploadPictureFC,
+  TGetImageFC,
 } from './../interfaces/IImageContext';
 // import { AlertContext } from './AlertContext';
 import * as ImagePicker from 'expo-image-picker';
+import firebase from '../database/firebase';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ImageContext = createContext<IImageContext>(defaultImageValue);
@@ -48,11 +50,27 @@ export const ImageProvider: React.FC = ({ children }) => {
     return result;
   };
 
+  const getImage: TGetImageFC = async (payload: IPhoto) => {
+    var url = '';
+
+    const img = firebase
+      .storage()
+      .ref()
+      .child(payload.path)
+      .child(payload.url!);
+    await img.getDownloadURL().then(uri => {
+      url = uri;
+    });
+
+    return url;
+  };
+
   return (
     <ImageContext.Provider
       value={{
         uploadPicture,
         takePicture,
+        getImage,
       }}
     >
       {children}
