@@ -4,11 +4,12 @@ import {
   Text,
   Button,
   View,
-  TextInput,
+  // TextInput,
   TouchableHighlight,
   KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TextInput } from '../../Components/TextInput';
 
 import { NavigationProps } from '../../Navigation/Navigation';
 
@@ -104,13 +105,13 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
         <KeyboardAvoidingView>
           <TextInput
             style={styles.textInput}
-            placeholder="Enter your email"
+            label="Email"
             onChangeText={setEmail}
             keyboardType="email-address"
           />
           <TextInput
             style={styles.textInput}
-            placeholder="Enter your password"
+            label="Password"
             onChangeText={setPassword}
             secureTextEntry
           />

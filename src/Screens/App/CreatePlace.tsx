@@ -4,7 +4,7 @@ import {
   View,
   Text,
   Button,
-  TextInput,
+  // TextInput,
   TouchableHighlight,
   ImageBackground,
 } from 'react-native';
@@ -15,6 +15,7 @@ import { PlaceContext } from './../../Contexts/PlaceContext';
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
 import { IPlace } from '../../interfaces/IPlaceContext';
 // import { ImageBrowser } from 'expo-image-picker-multiple';
+import { TextInput } from '../../Components/TextInput';
 
 type ICreatePlaceProps = NavigationProps<'CreatePlace'>;
 // interface ICreatePlaceProps {
@@ -140,14 +141,14 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
       <View style={styles.content}>
         <TextInput
           style={styles.textInput}
-          placeholder="Enter the title of the place"
+          label="Title"
           onChangeText={value => setForm({ ...form, title: value })}
           keyboardType="default"
         />
 
         <TextInput
           style={styles.textInput}
-          placeholder="Enter the description of the place"
+          label="Description"
           onChangeText={value => setForm({ ...form, description: value })}
           keyboardType="default"
         />

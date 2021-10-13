@@ -4,11 +4,12 @@ import {
   Text,
   Button,
   View,
-  TextInput,
+  // TextInput,
   TouchableHighlight,
   KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TextInput } from '../../Components/TextInput';
 
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 
@@ -98,7 +99,7 @@ export const ResetPassword: React.FC<IResetPasswordProps> = ({
         <KeyboardAvoidingView>
           <TextInput
             style={styles.textInput}
-            placeholder="Enter your email"
+            label="Email"
             onChangeText={setEmail}
             keyboardType="email-address"
           />

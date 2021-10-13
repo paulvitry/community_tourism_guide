@@ -3,22 +3,26 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   Dimensions,
   Animated,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { NightMode } from './../../styling/map/NightMode';
-import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 import { ImageContext } from '../../Contexts/ImageContext';
 import { PlaceContext } from '../../Contexts/PlaceContext';
 import SlidingUpPanel from 'rn-sliding-up-panel';
-// import firebase from '../../database/firebase';
+import { Entypo } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
 
 type IHomeProps = NavigationProps<'Home'>;
+
+const ACTION_BTN_BG = '#748B6F';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,6 +40,21 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
   },
+  headActions: {
+    // flexDirection: 'row',
+    // padding: 10,
+    alignItems: 'flex-end',
+    // justifyContent: 'space-between',
+  },
+  actionButton: {
+    margin: 10,
+    height: 50,
+    width: 50,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: ACTION_BTN_BG,
+  },
 });
 
 const pstyles = StyleSheet.create({
@@ -48,10 +67,11 @@ const pstyles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 250,
   },
   content: {
     padding: 10,
+    minHeight: 100,
   },
   title: {
     fontSize: 24,
@@ -63,13 +83,27 @@ const pstyles = StyleSheet.create({
     backgroundColor: '#F2F2F2',
   },
   contentAction: {
-    padding: 10,
+    padding: 20,
     flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  action: {
+    borderWidth: 2,
+    borderColor: 'blue',
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+  },
+  infos: {
+    flexDirection: 'row',
+    minHeight: 50,
+    alignItems: 'center',
   },
 });
 
 export const Home: React.FC<IHomeProps> = ({ navigation }) => {
-  const { logout } = useContext(AuthenticationContext);
   const { places, getPlaces } = useContext(PlaceContext);
   const { getImage } = useContext(ImageContext);
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -92,27 +126,17 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     })();
   }, []);
 
-  const onClickCreateSpot = () => {
-    console.log('create new spot');
-    navigation.navigate('CreatePlace');
-  };
-
-  const onClick = async () => {
-    console.log('logout');
-    await logout();
-  };
-
   const onClickProfile = async () => {
     navigation.navigate('Profile');
   };
 
-  const onStartAnimation = async () => {
-    await Animated.timing(animValue, {
-      toValue: 300,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
+  // const onStartAnimation = async () => {
+  //   await Animated.timing(animValue, {
+  //     toValue: 300,
+  //     duration: 500,
+  //     useNativeDriver: false,
+  //   }).start();
+  // };
 
   const renderSlidingUpPanel = () => {
     return (
@@ -132,19 +156,45 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
               </View>
               <View style={pstyles.divider} />
               <View style={pstyles.contentAction}>
-                <Text>Direction</Text>
-                <Text>partager</Text>
-                <Text>J'aime</Text>
-                <Text>Apl</Text>
-                <Text>Ajouter a ma liste</Text>
+                <TouchableOpacity style={pstyles.action}>
+                  <Entypo name="direction" size={24} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.action}>
+                  <Entypo name="share" size={24} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.action}>
+                  <Entypo name="heart-outlined" size={24} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.action}>
+                  <Entypo name="phone" size={24} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.action}>
+                  <Entypo name="add-to-list" size={24} color="blue" />
+                </TouchableOpacity>
               </View>
               <View style={pstyles.divider} />
               <View style={pstyles.content}>
-                <Text>Address</Text>
-                <Text>Open Hours</Text>
+                <TouchableOpacity style={pstyles.infos}>
+                  <Entypo name="location-pin" size={24} color="blue" />
+                  <Text>Address</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.infos}>
+                  <Entypo name="clock" size={24} color="blue" />
+                  <Text>Open Hours</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.infos}>
+                  <AntDesign name="earth" size={24} color="blue" />
+                  <Text>Web site</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={pstyles.infos}>
+                  <Entypo name="phone" size={24} color="blue" />
+                  <Text>Phone</Text>
+                </TouchableOpacity>
+
+                {/* <Text></Text>
                 <Text>site web</Text>
                 <Text>Telephone</Text>
-                <Text>Email</Text>
+                <Text>Email</Text> */}
               </View>
               <View style={pstyles.divider} />
             </View>
@@ -187,7 +237,7 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
                 );
                 setSelectedMarker(marker);
                 console.log(animValue, ' && ', panelRef);
-                if (animValue !== panelRef) slidingUpPanel.show(500);
+                if (animValue !== panelRef) slidingUpPanel.show(350);
               }}
             />
           );
@@ -195,11 +245,22 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
       </MapView>
       {renderSlidingUpPanel()}
 
-      {/* <SafeAreaView style={styles.overlayContainer}> */}
-      {/* <Button title="logout" onPress={onClick} />
-        <Button title="Create new spot!" onPress={onClickCreateSpot} /> */}
-      {/* <Button title="profile" onPress={onClickProfile} />
-      </SafeAreaView> */}
+      <SafeAreaView style={styles.overlayContainer}>
+        <View style={styles.headActions}>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={onClickProfile}
+          >
+            <EvilIcons name="user" size={40} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={onClickProfile}
+          >
+            <Ionicons name="filter" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </View>
   );
 };

@@ -43,17 +43,17 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
         console.log(newUser);
         setUser({
           id: newUser.uid,
-          firstname: newUser.displayName,
+          displayName: newUser.displayName,
           email: newUser.email,
-          picture: newUser.photoURL,
+          photoURL: newUser.photoURL,
         });
         await AsyncStorage.setItem(
           'user',
           JSON.stringify({
             email: newUser.email,
             password: payload.password,
-            firstname: newUser.displayName,
-            picture: newUser.photoURL,
+            displayName: newUser.displayName,
+            photoURL: newUser.photoURL,
           }),
         );
         Alerts.success({
@@ -89,9 +89,10 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       .then(async () => {
         const tmpuser = await getUser();
         console.log('Account created, user: ', tmpuser);
+        tmpuser?.updateProfile({ displayName: payload.displayName });
         Alerts.success({
           title: 'Successful Registration',
-          message: 'Welcome back !',
+          message: '',
         });
       })
       .catch(error => {

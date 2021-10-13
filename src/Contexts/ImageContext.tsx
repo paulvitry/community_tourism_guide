@@ -4,6 +4,7 @@ import {
   IImageContext,
   TTakePictureFC,
   TUploadPictureFC,
+  TUpdateProfilePictureFC,
   TGetImageFC,
 } from './../interfaces/IImageContext';
 // import { AlertContext } from './AlertContext';
@@ -65,12 +66,30 @@ export const ImageProvider: React.FC = ({ children }) => {
     return url;
   };
 
+  const updateProfilePicture: TUpdateProfilePictureFC = async (
+    payload: IPhoto,
+  ) => {
+    var tmpUser = firebase.auth().currentUser;
+    
+    console.log('path = ', payload.path);
+    
+    const ref = firebase.storage().ref().child(payload.path);
+
+    const blob = await (await fetch(payload.url!)).blob();
+    await ref.put(blob);
+
+    tmpUser?.updateProfile({ photoURL: payload.path.split('/')[1] });
+
+    
+  };
+
   return (
     <ImageContext.Provider
       value={{
         uploadPicture,
         takePicture,
         getImage,
+        updateProfilePicture,
       }}
     >
       {children}
