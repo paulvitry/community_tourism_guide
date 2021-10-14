@@ -50,6 +50,9 @@ export const PlaceProvider: React.FC = ({ children }) => {
       .catch(e => {
         consoe.log(e);
       });
+    (async () => {
+      await getPlaces();
+    })();
 
     // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
     // console.log('collection = ', collection);

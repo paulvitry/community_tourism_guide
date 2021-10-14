@@ -12,6 +12,7 @@ import { ResetPassword } from '../Screens/Auth/ResetPassword';
 import { Home } from '../Screens/App/Home';
 import { Profile } from '../Screens/App/Profile';
 import { CreatePlace } from '../Screens/App/CreatePlace';
+import { List } from '../Screens/App/List';
 
 interface INavigationProps {}
 
@@ -22,13 +23,15 @@ type NavigationParamList = {
   Home: React.FC;
   Profile: React.FC;
   CreatePlace: React.FC;
+  List: React.FC;
   
 };
 
-type TabParamList = {
-  Home: React.FC;
-  Profile: React.FC;
-};
+// type TabParamList = {
+//   Home: React.FC;
+//   Profile: React.FC;
+
+// };
 
 export type NavigationProps<T extends keyof NavigationParamList> = {
   navigation: StackNavigationProp<NavigationParamList, T>;
@@ -69,6 +72,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="CreatePlace" component={CreatePlace} />
+          <Stack.Screen name="List" component={List} />
         </Stack.Navigator>
       ) : (
         // <Stack.Navigator

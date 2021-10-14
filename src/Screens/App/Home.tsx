@@ -130,6 +130,10 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     navigation.navigate('Profile');
   };
 
+  const onClickList = () => {
+    navigation.navigate('List');
+  };
+
   // const onStartAnimation = async () => {
   //   await Animated.timing(animValue, {
   //     toValue: 300,
@@ -258,6 +262,9 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
             onPress={onClickProfile}
           >
             <Ionicons name="filter" size={24} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton} onPress={onClickList}>
+            <Ionicons name="list" size={24} color="white" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
