@@ -6,6 +6,7 @@ import {
   TUploadPictureFC,
   TUpdateProfilePictureFC,
   TGetImageFC,
+  IPhoto,
 } from './../interfaces/IImageContext';
 // import { AlertContext } from './AlertContext';
 import * as ImagePicker from 'expo-image-picker';

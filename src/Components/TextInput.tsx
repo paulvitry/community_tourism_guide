@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput as TI } from 'react-native';
+import { StyleSheet, View, Text, TextInput as TI, KeyboardTypeOptions } from 'react-native';
 
 interface ITextInputProps {
   label: string;
   onChangeText: React.Dispatch<React.SetStateAction<any>>;
-  keyboardType: string | undefined;
-  secureTextEntry: boolean | undefined;
+  keyboardType?: KeyboardTypeOptions | undefined;
+  secureTextEntry?: boolean;
 }
 
 const styles = StyleSheet.create({

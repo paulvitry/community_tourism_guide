@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -13,6 +13,7 @@ import { Home } from '../Screens/App/Home';
 import { Profile } from '../Screens/App/Profile';
 import { CreatePlace } from '../Screens/App/CreatePlace';
 import { List } from '../Screens/App/List';
+import { ListDetails } from '../Screens/App/ListDetails';
 
 interface INavigationProps {}
 
@@ -24,6 +25,7 @@ type NavigationParamList = {
   Profile: React.FC;
   CreatePlace: React.FC;
   List: React.FC;
+  ListDetails: React.FC;
   
 };
 
@@ -34,7 +36,7 @@ type NavigationParamList = {
 // };
 
 export type NavigationProps<T extends keyof NavigationParamList> = {
-  navigation: StackNavigationProp<NavigationParamList, T>;
+  navigation: NativeStackNavigationProp<NavigationParamList, T>;
   route: RouteProp<NavigationParamList, T>;
 };
 
@@ -73,6 +75,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           <Stack.Screen name="Profile" component={Profile} />
           <Stack.Screen name="CreatePlace" component={CreatePlace} />
           <Stack.Screen name="List" component={List} />
+          <Stack.Screen name="ListDetails" component={ListDetails} />
         </Stack.Navigator>
       ) : (
         // <Stack.Navigator

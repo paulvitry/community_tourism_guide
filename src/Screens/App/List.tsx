@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -17,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { ListContext } from '../../Contexts/ListContext';
 import { TextInput } from '../../Components/TextInput';
+import { IList } from '../../interfaces/IListContext';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#748B6F';
@@ -79,6 +81,29 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 1,
     backgroundColor: 'grey',
+  },
+
+  list: {
+    width: '90%',
+    minHeight: 50,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    padding: 5,
+  },
+
+  listTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  listTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  listDescription: {
+    color: 'grey',
   },
 });
 
@@ -156,6 +181,12 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
   const onClickAdd = () => {
     console.log('add');
     setModalVisible(true);
+  };
+
+  const handleListClick = (list: IList) => {
+    console.log('handle click list details');
+    console.log(list);
+    navigation.navigate('ListDetails', { list: list });
   };
 
   useEffect(() => {
@@ -240,8 +271,21 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
           </View>
         </View>
         <View style={styles.content}>
-          {lists?.map((list, index) => {
-            return <Text key={index}>{list.title}</Text>;
+          {lists?.map((list: IList, index: number) => {
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleListClick(list)}
+                style={styles.list}
+              >
+                <View style={styles.listTitleRow}>
+                  <Text style={styles.listTitle}>{list.title}</Text>
+                  <AntDesign name="right" size={24} color="black" />
+                </View>
+
+                <Text style={styles.listDescription}>{list.description}</Text>
+              </TouchableOpacity>
+            );
           })}
           {/* <View style={styles.bgShape} /> */}
 

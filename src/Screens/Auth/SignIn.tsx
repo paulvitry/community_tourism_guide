@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
 
 export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
   const { login } = useContext(AuthenticationContext);
-  const [setEmail] = useState<string>(null);
-  const [setPassword] = useState<string>(null);
+  const [setEmail] = useState<string | undefined>(undefined);
+  const [setPassword] = useState<string | undefined>(undefined);
   const [values] = useState<IAuth>({
     email: 'community-tourism@yopmail.com',
     password: 'password',

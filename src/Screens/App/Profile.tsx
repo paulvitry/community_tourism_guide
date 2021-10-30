@@ -137,9 +137,9 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
     useContext(ImageContext);
   const [image, setImage] = useState();
 
-  const [form, setForm] = useState({ displayName: user.displayName });
+  const [form, setForm] = useState({ displayName: user?.displayName });
 
-  const onClick = async () => {
+  const handleLogout = async () => {
     console.log('logout');
     await logout();
   };
@@ -158,7 +158,7 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
     (async () => {
       await getUser();
       console.log('use effect: ', user);
-      setImage(await getImage({ path: 'profile/', url: user.photoURL }));
+      if (user?.photoURL) setImage(await getImage({ path: 'profile/', url: user?.photoURL }));
     })();
   }, []);
 
@@ -173,7 +173,7 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
   };
 
   const handleResetPwd = async () => {
-    await resetpassword({ email: user.email });
+    await resetpassword({ email: user!.email });
   };
 
   const renderActions = () => {
@@ -188,7 +188,7 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
           <Entypo name="key" size={24} color="white" />
           <Text style={styles.textActions}>Reset password</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity style={styles.actionButton} onPress={handleLogout}>
           <AntDesign name="logout" size={24} color="white" />
           <Text style={styles.textActions}>Logout</Text>
         </TouchableOpacity>
@@ -214,7 +214,7 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
           <TouchableOpacity style={styles.profilePicture} onPress={handleImage}>
             <Image source={{ uri: image }} style={styles.image} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{user.displayName}</Text>
+          <Text style={styles.headerTitle}>{user!.displayName}</Text>
           <View style={{ height: 40 }} />
           {renderActions()}
         </View>
