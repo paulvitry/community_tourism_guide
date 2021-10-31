@@ -18,7 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { ListContext } from '../../Contexts/ListContext';
 import { TextInput } from '../../Components/TextInput';
-import { IList } from '../../interfaces/IListContext';
+import { IList } from '../../Interfaces/IListContext';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#748B6F';
@@ -26,7 +26,7 @@ const ACTION_BTN_BG = '#748B6F';
 type IListDetailsProps = NavigationProps<'List'>;
 
 interface IListDetailsRoute {
-	list: IList;
+  list: IList;
 }
 
 const styles = StyleSheet.create({
@@ -111,7 +111,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ListDetails: React.FC<IListDetailsProps> = ({ navigation, route }) => {
+export const ListDetails: React.FC<IListDetailsProps> = ({
+  navigation,
+  route,
+}) => {
   //   const { lists, getLists, createList } = useContext(ListContext);
   //   const [modalVisible, setModalVisible] = useState(false);
   //   const [form, setForm] = useState({ title: null, description: null });

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext } from 'react';
-import { defaultListValue, ICreateList, IList, IListContext, TCreateListFC, TGetListsFC } from './../interfaces/IListContext';
+import { defaultListValue, ICreateList, IList, IListContext, TCreateListFC, TGetListsFC } from '../Interfaces/IListContext';
 
-import firebase from '../database/firebase';
+import firebase from '../Database/firebase';
 import { AuthenticationContext } from './../Contexts/AuthenticationContext';
 // import { AlertContext } from './AlertContext';
 

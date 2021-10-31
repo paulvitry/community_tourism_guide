@@ -18,7 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { ListContext } from '../../Contexts/ListContext';
 import { TextInput } from '../../Components/TextInput';
-import { IList } from '../../interfaces/IListContext';
+import { IList } from '../../Interfaces/IListContext';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#748B6F';

@@ -7,10 +7,10 @@ import {
   TUpdateProfilePictureFC,
   TGetImageFC,
   IPhoto,
-} from './../interfaces/IImageContext';
+} from '../Interfaces/IImageContext';
 // import { AlertContext } from './AlertContext';
 import * as ImagePicker from 'expo-image-picker';
-import firebase from '../database/firebase';
+import firebase from '../Database/firebase';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const ImageContext = createContext<IImageContext>(defaultImageValue);

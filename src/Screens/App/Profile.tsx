@@ -4,10 +4,8 @@ import {
   View,
   Text,
   Button,
-  ImageBackground,
   TouchableOpacity,
   Image,
-  TextInput,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -55,6 +53,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     fontWeight: 'bold',
+    color: 'white',
   },
 
   imageBackground: {
@@ -158,7 +157,8 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
     (async () => {
       await getUser();
       console.log('use effect: ', user);
-      if (user?.photoURL) setImage(await getImage({ path: 'profile/', url: user?.photoURL }));
+      if (user?.photoURL)
+        setImage(await getImage({ path: 'profile/', url: user?.photoURL }));
     })();
   }, []);
 

@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from '../../Components/TextInput';
 
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
-import { IAuth } from './../../interfaces/IAuthenticationContext';
+import { IAuth } from '../../Interfaces/IAuthenticationContext';
 
 import { NavigationProps } from '../../Navigation/Navigation';
 

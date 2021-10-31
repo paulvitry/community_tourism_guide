@@ -14,7 +14,7 @@ import { TextInput } from '../../Components/TextInput';
 import { NavigationProps } from '../../Navigation/Navigation';
 
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
-import { IAuth } from './../../interfaces/IAuthenticationContext';
+import { IAuth } from '../../Interfaces/IAuthenticationContext';
 // import { getAuth, linkWithPopup, GoogleAuthProvider } from 'firebase/auth';
 // const provider = new GoogleAuthProvider();
 

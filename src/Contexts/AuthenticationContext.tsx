@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext } from 'react';
 
-import firebase from '../database/firebase';
-import { IUser } from './../interfaces/IUser';
+import firebase from '../Database/firebase';
+import { IUser } from '../Interfaces/IUser';
 import {
   defaultAuthenticationValue,
   IAuthenticationContext,
@@ -14,7 +14,7 @@ import {
   // TUploadPictureFC,
   IAuth,
   IReset,
-} from './../interfaces/IAuthenticationContext';
+} from '../Interfaces/IAuthenticationContext';
 import { AlertContext } from './AlertContext';
 // import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';

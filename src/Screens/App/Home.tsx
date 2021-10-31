@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationProps } from '../../Navigation/Navigation';
-import { NightMode } from './../../styling/map/NightMode';
+import { NightMode } from '../../Styling/Map/NightMode';
 import { ImageContext } from '../../Contexts/ImageContext';
 import { PlaceContext } from '../../Contexts/PlaceContext';
 import SlidingUpPanel from 'rn-sliding-up-panel';
@@ -19,6 +19,8 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
+import { PlaceDetails } from '../../Components/PlaceDetails';
+import { IPlace } from '../../Interfaces/IPlaceContext';
 
 type IHomeProps = NavigationProps<'Home'>;
 
@@ -106,7 +108,7 @@ const pstyles = StyleSheet.create({
 export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { places, getPlaces } = useContext(PlaceContext);
   const { getImage } = useContext(ImageContext);
-  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState<IPlace>();
   // const [markers, setMarkers] = useState();
   const [slidingUpPanel, setSlidingUpPanel] = useState();
   const [image, setImage] = useState(null);
@@ -150,60 +152,7 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
         snappingPoints={[300, 600]}
         backdropOpacity={0.1}
       >
-        <View style={pstyles.container}>
-          {selectedMarker! && (
-            <View>
-              <Image style={pstyles.image} source={{ uri: image }} />
-              <View style={pstyles.content}>
-                <Text style={pstyles.title}>{selectedMarker.title}</Text>
-                <Text>{selectedMarker.description}</Text>
-              </View>
-              <View style={pstyles.divider} />
-              <View style={pstyles.contentAction}>
-                <TouchableOpacity style={pstyles.action}>
-                  <Entypo name="direction" size={24} color="blue" />
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.action}>
-                  <Entypo name="share" size={24} color="blue" />
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.action}>
-                  <Entypo name="heart-outlined" size={24} color="blue" />
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.action}>
-                  <Entypo name="phone" size={24} color="blue" />
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.action}>
-                  <Entypo name="add-to-list" size={24} color="blue" />
-                </TouchableOpacity>
-              </View>
-              <View style={pstyles.divider} />
-              <View style={pstyles.content}>
-                <TouchableOpacity style={pstyles.infos}>
-                  <Entypo name="location-pin" size={24} color="blue" />
-                  <Text>Address</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.infos}>
-                  <Entypo name="clock" size={24} color="blue" />
-                  <Text>Open Hours</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.infos}>
-                  <AntDesign name="earth" size={24} color="blue" />
-                  <Text>Web site</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={pstyles.infos}>
-                  <Entypo name="phone" size={24} color="blue" />
-                  <Text>Phone</Text>
-                </TouchableOpacity>
-
-                {/* <Text></Text>
-                <Text>site web</Text>
-                <Text>Telephone</Text>
-                <Text>Email</Text> */}
-              </View>
-              <View style={pstyles.divider} />
-            </View>
-          )}
-        </View>
+        <PlaceDetails place={selectedMarker} />
       </SlidingUpPanel>
     );
   };
@@ -227,7 +176,7 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
       >
         {/* {console.log('component refreshed')}
         {console.log('places ->', places?.length)} */}
-        {places?.map((marker, index) => {
+        {places?.map((marker: any, index: number) => {
           return (
             <Marker
               key={index}

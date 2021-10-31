@@ -2,9 +2,10 @@ import React, { createContext, useState } from 'react';
 import {
   defaultPlaceValue,
   IPlaceContext,
-} from './../interfaces/IPlaceContext';
+} from '../Interfaces/IPlaceContext';
 
-import firebase from '../database/firebase';
+import firebase from '../Database/firebase';
+import { TTakePictureFC } from '../Interfaces/IImageContext';
 // import { AlertContext } from './AlertContext';
 
 export const PlaceContext = createContext<IPlaceContext>(defaultPlaceValue);
@@ -48,7 +49,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
         created_at: Date.now(),
       })
       .catch(e => {
-        consoe.log(e);
+        console.log(e);
       });
     (async () => {
       await getPlaces();

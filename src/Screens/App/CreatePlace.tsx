@@ -13,7 +13,7 @@ import { NavigationProps } from '../../Navigation/Navigation';
 import { ImageContext } from './../../Contexts/ImageContext';
 import { PlaceContext } from './../../Contexts/PlaceContext';
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
-import { IPlace } from '../../interfaces/IPlaceContext';
+import { IPlace } from '../../Interfaces/IPlaceContext';
 // import { ImageBrowser } from 'expo-image-picker-multiple';
 import { TextInput } from '../../Components/TextInput';
 
