@@ -67,11 +67,12 @@ export const PlaceDetails: React.FC<IPlaceDetailsProps> = ({ place }) => {
   const [image, setImage] = useState(null);
   const { getImage } = useContext(ImageContext);
 
-
   useEffect(() => {
-    (async () => {
-      setImage(await getImage({ path: 'images', url: place!.picture }));
-    })();
+    if (place?.picture) {
+      (async () => {
+        setImage(await getImage({ path: 'images', url: place!.picture }));
+      })();
+    }
   });
 
   return (
