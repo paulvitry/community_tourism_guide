@@ -1,7 +1,10 @@
 import React, { createContext, useState } from 'react';
 import {
   defaultPlaceValue,
+  IPlace,
   IPlaceContext,
+  TCreatePlaceFC,
+  TGetPlacesFC,
 } from '../Interfaces/IPlaceContext';
 
 import firebase from '../Database/firebase';
@@ -12,22 +15,25 @@ export const PlaceContext = createContext<IPlaceContext>(defaultPlaceValue);
 
 export const PlaceProvider: React.FC = ({ children }) => {
   //   const { Alerts } = useContext(AlertContext);
-  const [places, setPlaces] = useState<Array<any>>();
+  const [places, setPlaces] = useState<Array<IPlace>>();
 
-  const getPlaces: TTakePictureFC = async () => {
+  const getPlaces: TGetPlacesFC = async () => {
     console.log('getPlaces');
     const tmpPlaces = await (
       await firebase.firestore().collection('Places').get()
-    ).docs.map(doc => doc.data());
+    ).docs.map(doc => {
+      return { ...doc.data(), id: doc.id };
+    });
     setPlaces(tmpPlaces);
     return tmpPlaces;
   };
 
-  const createPlace: TTakePictureFC = async payload => {
+  const createPlace: TCreatePlaceFC = async payload => {
     console.log('createPlace');
-    const path = payload.uri.split('/')[payload.uri.split('/').length - 1];
+    const path =
+      payload.picture!.split('/')[payload.picture!.split('/').length - 1];
 
-    const response = await fetch(payload.uri);
+    const response = await fetch(payload.picture!);
     const blob = await response.blob();
 
     var ref = firebase
@@ -45,7 +51,10 @@ export const PlaceProvider: React.FC = ({ children }) => {
         title: payload.title,
         description: payload.description,
         picture: path,
-        coordinate: payload.coordinate,
+        coordinate: {
+          latitude: payload.latitude,
+          longitude: payload.longitude,
+        },
         created_at: Date.now(),
       })
       .catch(e => {

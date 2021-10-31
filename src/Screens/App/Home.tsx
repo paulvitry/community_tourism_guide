@@ -110,8 +110,10 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { getImage } = useContext(ImageContext);
   const [selectedMarker, setSelectedMarker] = useState<IPlace>();
   // const [markers, setMarkers] = useState();
-  const [slidingUpPanel, setSlidingUpPanel] = useState();
+  const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel | null>(null);
   const [image, setImage] = useState(null);
+
+  const [allowDragging, setAllowDragging] = useState(true);
   // const [animValue] = useState(new Animated.Value(0));
   const panelRef = new Animated.Value(300);
   let animValue = new Animated.Value(0);
@@ -151,8 +153,9 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
         animatedValue={animValue}
         snappingPoints={[300, 600]}
         backdropOpacity={0.1}
+        allowDragging= {allowDragging}
       >
-        <PlaceDetails place={selectedMarker} />
+        <PlaceDetails place={selectedMarker} setAllowDragging={setAllowDragging}/>
       </SlidingUpPanel>
     );
   };

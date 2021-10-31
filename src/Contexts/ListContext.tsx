@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-import { defaultListValue, ICreateList, IList, IListContext, TCreateListFC, TGetListsFC } from '../Interfaces/IListContext';
+import { defaultListValue, IAddPlaceToList, ICreateList, IList, IListContext, TAddPlaceToListFC, TCreateListFC, TGetListsFC } from '../Interfaces/IListContext';
 
 import firebase from '../Database/firebase';
 import { AuthenticationContext } from './../Contexts/AuthenticationContext';
@@ -48,6 +48,17 @@ export const ListProvider: React.FC = ({ children }) => {
     console.log('yeah');
   };
 
+  const addPlaceToList: TAddPlaceToListFC = async (payload: IAddPlaceToList) => {
+    console.log('add place to list inside context');
+
+    const concernedList = lists?.find(list => list.id === payload.listId);
+    concernedList.places.find(place => place.id === payload.placeId);
+
+    // If already in list Alert already in list
+    // If not add to places
+
+  }
+
   return (
     <ListContext.Provider
       value={{
@@ -55,6 +66,7 @@ export const ListProvider: React.FC = ({ children }) => {
 
         createList,
         getLists,
+        addPlaceToList,
       }}
     >
       {children}

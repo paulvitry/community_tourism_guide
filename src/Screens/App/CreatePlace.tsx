@@ -7,13 +7,14 @@ import {
   // TextInput,
   TouchableHighlight,
   ImageBackground,
+  ImageSourcePropType,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { ImageContext } from './../../Contexts/ImageContext';
 import { PlaceContext } from './../../Contexts/PlaceContext';
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
-import { IPlace } from '../../Interfaces/IPlaceContext';
+import { ICreatePlace } from '../../Interfaces/IPlaceContext';
 // import { ImageBrowser } from 'expo-image-picker-multiple';
 import { TextInput } from '../../Components/TextInput';
 
@@ -93,16 +94,17 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   navigation,
   route,
 }) => {
-  const [form, setForm] = useState<IPlace>({
-    title: null,
-    description: null,
-    uri: null,
-    creator: null,
-    coordinate: null,
+  const [form, setForm] = useState<ICreatePlace>({
+    title: undefined,
+    description: undefined,
+    picture: undefined,
+    creator: undefined,
+    latitude: undefined,
+    longitude: undefined,
   });
   // const [title, setTitle] = useState<string>();
   // const [description, setDescription] = useState<string>();
-  const [picture, setPicture] = useState<string>(null);
+  const [selectedPicture, setSelectedPicture] = useState<ImageSourcePropType>();
   const { uploadPicture } = useContext(ImageContext);
   const { createPlace, getPlaces } = useContext(PlaceContext);
   const { user } = useContext(AuthenticationContext);
@@ -111,12 +113,19 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   };
   const onSelectMedias = async () => {
     const res = await uploadPicture();
-    setPicture(res);
-    setForm({ ...form, uri: res.uri });
+    setSelectedPicture(res);
+    setForm({ ...form, picture: res.uri });
   };
 
   useEffect(() => {
-    setForm({ ...form, coordinate: route.params.coordinate, creator: user.id });
+    setForm({ ...form, creator: user!.id });
+    if (route.params.coordinate) {
+      setForm({
+        ...form,
+        longitude: route.params.coordinate.longitude,
+        latitude: route.params.coordinate.latitude,
+      });
+    }
   }, []);
 
   const onClick = async () => {
@@ -140,14 +149,12 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
 
       <View style={styles.content}>
         <TextInput
-          style={styles.textInput}
           label="Title"
           onChangeText={value => setForm({ ...form, title: value })}
           keyboardType="default"
         />
 
         <TextInput
-          style={styles.textInput}
           label="Description"
           onChangeText={value => setForm({ ...form, description: value })}
           keyboardType="default"
@@ -157,7 +164,7 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
           onPress={onSelectMedias}
           style={{ backgroundColor: 'grey' }}
         >
-          <ImageBackground style={styles.imageBackground} source={picture}>
+          <ImageBackground style={styles.imageBackground} source={selectedPicture!}>
             <Text>Select photo(s)</Text>
           </ImageBackground>
         </TouchableHighlight>

@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableHighlight,
   TouchableOpacity,
-  KeyboardAvoidingView,
   ScrollView,
   Alert,
 } from 'react-native';
@@ -28,7 +27,6 @@ type IListProps = NavigationProps<'List'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: ,
   },
   header: {
     width: '100%',
@@ -42,7 +40,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
   },
   content: {
-    flex: 0.7,
+    flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
   },
@@ -81,6 +79,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 1,
     backgroundColor: 'grey',
+  },
+
+  scrollView: {
+    flex: 0.9,
   },
 
   list: {
@@ -270,6 +272,8 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
             </View>
           </View>
         </View>
+        <ScrollView style={styles.scrollView}>
+
         <View style={styles.content}>
           {lists?.map((list: IList, index: number) => {
             return (
@@ -291,7 +295,8 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
 
           <View style={{ height: 40 }} />
         </View>
-        <View style={styles.footer}></View>
+        </ScrollView>
+
         {createListModal()}
       </SafeAreaView>
     </LinearGradient>
