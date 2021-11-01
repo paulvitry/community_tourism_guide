@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    width: '100%',
     flex: 0.1,
 
     justifyContent: 'flex-end',
@@ -43,6 +42,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
+    height: '100%',
   },
   footer: {
     flex: 0.2,
@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
 
   scrollView: {
     flex: 0.9,
+    backgroundColor: 'white',
   },
 
   list: {
@@ -194,7 +195,6 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       await getLists();
-      // await setLists(await getLists());
       console.log('hey');
     })();
   }, []);
@@ -273,28 +273,33 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
           </View>
         </View>
         <ScrollView style={styles.scrollView}>
+          <View style={styles.content}>
+            {lists?.length !== 0 ? (
+              lists?.map((list: IList, index: number) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleListClick(list)}
+                    style={styles.list}
+                  >
+                    <View style={styles.listTitleRow}>
+                      <Text style={styles.listTitle}>{list.title}</Text>
+                      <AntDesign name="right" size={24} color="black" />
+                    </View>
 
-        <View style={styles.content}>
-          {lists?.map((list: IList, index: number) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleListClick(list)}
-                style={styles.list}
-              >
-                <View style={styles.listTitleRow}>
-                  <Text style={styles.listTitle}>{list.title}</Text>
-                  <AntDesign name="right" size={24} color="black" />
-                </View>
+                    <Text style={styles.listDescription}>
+                      {list.description}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })
+            ) : (
+              <Text >{'You don\'t have any list yet...'}</Text>
+            )}
+            {/* <View style={styles.bgShape} /> */}
 
-                <Text style={styles.listDescription}>{list.description}</Text>
-              </TouchableOpacity>
-            );
-          })}
-          {/* <View style={styles.bgShape} /> */}
-
-          <View style={{ height: 40 }} />
-        </View>
+            <View style={{ height: 40 }} />
+          </View>
         </ScrollView>
 
         {createListModal()}

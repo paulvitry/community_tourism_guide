@@ -8,6 +8,9 @@ import {
   TouchableHighlight,
   ImageBackground,
   ImageSourcePropType,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
@@ -29,8 +32,7 @@ type ICreatePlaceProps = NavigationProps<'CreatePlace'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //  alignItems: 'center',
-    // justifyContent: 'center',
+    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -40,12 +42,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  scrollView: {
+    flex: 0.9,
+    backgroundColor: 'white',
+  },
   content: {
-    flex: 0.7,
+    flex: 1,
     padding: '5%',
   },
   footer: {
-    flex: 0.2,
+    height: 200,
     alignItems: 'center',
   },
   headerRow: {
@@ -101,6 +107,12 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
     creator: undefined,
     latitude: undefined,
     longitude: undefined,
+    line1: undefined,
+    city: undefined,
+    postalCode: undefined,
+    country: undefined,
+    website: undefined,
+    phone: undefined,
   });
   // const [title, setTitle] = useState<string>();
   // const [description, setDescription] = useState<string>();
@@ -118,13 +130,15 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   };
 
   useEffect(() => {
-    setForm({ ...form, creator: user!.id });
-    if (route.params.coordinate) {
+    if (route.params?.coordinate!) {
       setForm({
         ...form,
+        creator: user?.id,
         longitude: route.params.coordinate.longitude,
         latitude: route.params.coordinate.latitude,
       });
+    } else {
+      setForm({ ...form, creator: user?.id });
     }
   }, []);
 
@@ -146,42 +160,98 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
           <Button title="back" onPress={onBackClick} />
         </View>
       </View>
-
-      <View style={styles.content}>
-        <TextInput
-          label="Title"
-          onChangeText={value => setForm({ ...form, title: value })}
-          keyboardType="default"
-        />
-
-        <TextInput
-          label="Description"
-          onChangeText={value => setForm({ ...form, description: value })}
-          keyboardType="default"
-        />
-
-        <TouchableHighlight
-          onPress={onSelectMedias}
-          style={{ backgroundColor: 'grey' }}
+      <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
         >
-          <ImageBackground style={styles.imageBackground} source={selectedPicture!}>
-            <Text>Select photo(s)</Text>
-          </ImageBackground>
-        </TouchableHighlight>
+      <ScrollView style={styles.scrollView}>
+        
+          <View style={styles.content}>
+            <TextInput
+              label="Title"
+              onChangeText={value => setForm({ ...form, title: value })}
+              keyboardType="default"
+              isRequired
+            />
 
-        {/* <ImageBrowser
+            <TextInput
+              label="Description"
+              onChangeText={value => setForm({ ...form, description: value })}
+              keyboardType="default"
+            />
+
+            <Text style={{ fontWeight: 'bold' }}>
+              Select photo<Text style={{ color: 'red', fontWeight: 'normal' }}>*</Text>
+            </Text>
+            <TouchableHighlight
+              onPress={onSelectMedias}
+              style={{ backgroundColor: 'grey' }}
+            >
+              <ImageBackground
+                style={styles.imageBackground}
+                source={selectedPicture!}
+              ></ImageBackground>
+            </TouchableHighlight>
+
+            <TextInput
+              label="Latitude"
+              onChangeText={value => setForm({ ...form, latitude: value })}
+              keyboardType="default"
+              isRequired
+            />
+            <TextInput
+              label="Longitude"
+              onChangeText={value => setForm({ ...form, longitude: value })}
+              keyboardType="default"
+              isRequired
+            />
+            <TextInput
+              label="Line1"
+              onChangeText={value => setForm({ ...form, line1: value })}
+              keyboardType="default"
+            />
+            <TextInput
+              label="City"
+              onChangeText={value => setForm({ ...form, city: value })}
+              keyboardType="default"
+            />
+            <TextInput
+              label="Postal Code"
+              onChangeText={value => setForm({ ...form, postalCode: value })}
+              keyboardType="default"
+            />
+            <TextInput
+              label="Country"
+              onChangeText={value => setForm({ ...form, country: value })}
+              keyboardType="default"
+            />
+            <TextInput
+              label="website"
+              onChangeText={value => setForm({ ...form, website: value })}
+              keyboardType="default"
+            />
+            <TextInput
+              label="phone number"
+              onChangeText={value => setForm({ ...form, phone: value })}
+              keyboardType="default"
+            />
+
+            {/* <ImageBrowser
           max={4}
           // onChange={(num, onSubmit) => {}}
           // callback={callback => {}}
         /> */}
-      </View>
+          </View>
 
-      <View style={styles.footer}>
-        <View style={styles.topFooter}></View>
-        <TouchableHighlight style={styles.actionButton} onPress={onClick}>
-          <Text style={styles.actionButtonText}>Publish</Text>
-        </TouchableHighlight>
-      </View>
+        <View style={styles.footer}>
+          <View style={styles.topFooter}></View>
+          <TouchableHighlight style={styles.actionButton} onPress={onClick}>
+            <Text style={styles.actionButtonText}>Publish</Text>
+          </TouchableHighlight>
+        </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
+
     </SafeAreaView>
   );
 };

@@ -4,6 +4,7 @@ import {
   IPlace,
   IPlaceContext,
   TCreatePlaceFC,
+  TGetPlaceByIdFC,
   TGetPlacesFC,
 } from '../Interfaces/IPlaceContext';
 
@@ -28,8 +29,20 @@ export const PlaceProvider: React.FC = ({ children }) => {
     return tmpPlaces;
   };
 
+  const getPlaceById: TGetPlaceByIdFC = async (payload: string) => {
+    const snapshot = await firebase.firestore().collection('Places').doc(payload).get();
+    const place: IPlace = { ...snapshot.data(), id: snapshot.id };
+    console.log('place: ', place);
+
+    // const doc = snapshot.docs.map(doc => {
+    //   return { ...doc.data(), id: doc.id };
+    // });
+    return place;
+  };
+
   const createPlace: TCreatePlaceFC = async payload => {
     console.log('createPlace');
+    console.log(payload);
     const path =
       payload.picture!.split('/')[payload.picture!.split('/').length - 1];
 
@@ -55,11 +68,18 @@ export const PlaceProvider: React.FC = ({ children }) => {
           latitude: payload.latitude,
           longitude: payload.longitude,
         },
+        line1: payload.line1,
+        city: payload.city,
+        postalCode: payload.postalCode,
+        country: payload.country,
+        website: payload.website,
+        phone: payload.phone,
         created_at: Date.now(),
       })
       .catch(e => {
         console.log(e);
       });
+
     (async () => {
       await getPlaces();
     })();
@@ -77,6 +97,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
 
         createPlace,
         getPlaces,
+        getPlaceById,
       }}
     >
       {children}

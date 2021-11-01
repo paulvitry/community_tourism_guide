@@ -24,7 +24,7 @@ export const AuthenticationContext = createContext<IAuthenticationContext>(
 );
 
 export const AuthenticationProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<null | IUser>(null);
+  const [user, setUser] = useState<IUser | undefined>(undefined);
   const { Alerts } = useContext(AlertContext);
 
   const getUser: TGetUserFC = async () => {

@@ -14,10 +14,11 @@ import { Profile } from '../Screens/App/Profile';
 import { CreatePlace } from '../Screens/App/CreatePlace';
 import { List } from '../Screens/App/List';
 import { ListDetails } from '../Screens/App/ListDetails';
+import { PlaceDetails } from '../Screens/App/PlaceDetails';
 
 interface INavigationProps {}
 
-type NavigationParamList = {
+export type NavigationParamList = {
   SignIn: React.FC;
   SignUp: React.FC;
   ResetPassword: React.FC;
@@ -26,7 +27,7 @@ type NavigationParamList = {
   CreatePlace: React.FC;
   List: React.FC;
   ListDetails: React.FC;
-  
+  PlaceDetails: React.FC;
 };
 
 // type TabParamList = {
@@ -76,6 +77,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           <Stack.Screen name="CreatePlace" component={CreatePlace} />
           <Stack.Screen name="List" component={List} />
           <Stack.Screen name="ListDetails" component={ListDetails} />
+          <Stack.Screen name="PlaceDetails" component={PlaceDetails} />
         </Stack.Navigator>
       ) : (
         // <Stack.Navigator

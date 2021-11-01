@@ -8,6 +8,7 @@ import { PlaceProvider } from './src/Contexts/PlaceContext';
 import { ListProvider } from './src/Contexts/ListContext';
 import { AlertProvier } from './src/Contexts/AlertContext';
 import FlashMessage from 'react-native-flash-message';
+import { NativeBaseProvider } from 'native-base';
 // require('dotenv').config();
 
 export default function App() {
@@ -19,9 +20,10 @@ export default function App() {
             <PlaceProvider>
 
             <ListProvider>
+            <NativeBaseProvider>
             <Navigation />
             <FlashMessage position="top" />
-
+            </NativeBaseProvider>
             </ListProvider>
             </PlaceProvider>
           </ImageProvider>

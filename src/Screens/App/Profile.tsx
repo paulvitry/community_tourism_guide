@@ -136,7 +136,7 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
     useContext(ImageContext);
   const [image, setImage] = useState();
 
-  const [form, setForm] = useState({ displayName: user?.displayName });
+  // const [form, setForm] = useState({ displayName: user?.displayName });
 
   const handleLogout = async () => {
     console.log('logout');

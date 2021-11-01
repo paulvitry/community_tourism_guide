@@ -7,6 +7,7 @@ import {
   Animated,
   Image,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -19,8 +20,9 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
-import { PlaceDetails } from '../../Components/PlaceDetails';
+import { PlaceDetailsView } from '../../Components/PlaceDetailsView';
 import { IPlace } from '../../Interfaces/IPlaceContext';
+import { AddToListModal } from '../../Components/AddToListModal';
 
 type IHomeProps = NavigationProps<'Home'>;
 
@@ -110,7 +112,9 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { getImage } = useContext(ImageContext);
   const [selectedMarker, setSelectedMarker] = useState<IPlace>();
   // const [markers, setMarkers] = useState();
-  const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel | null>(null);
+  const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel | null>(
+    null,
+  );
   const [image, setImage] = useState(null);
 
   const [allowDragging, setAllowDragging] = useState(true);
@@ -138,6 +142,10 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     navigation.navigate('List');
   };
 
+  const onClickAddPlace = () => {
+    navigation.navigate('CreatePlace');
+  };
+
   // const onStartAnimation = async () => {
   //   await Animated.timing(animValue, {
   //     toValue: 300,
@@ -153,9 +161,15 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
         animatedValue={animValue}
         snappingPoints={[300, 600]}
         backdropOpacity={0.1}
-        allowDragging= {allowDragging}
+        allowDragging={allowDragging}
+        // draggableRange={{ top: wind, bottom: 0 }}
       >
-        <PlaceDetails place={selectedMarker} setAllowDragging={setAllowDragging}/>
+        <View style={{ flex: 1 }}>
+          <PlaceDetailsView
+            place={selectedMarker}
+            // setModalVisible={setModalVisible}
+          />
+        </View>
       </SlidingUpPanel>
     );
   };
@@ -187,13 +201,13 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
               title={marker.title}
               description={marker.description}
               onPress={async () => {
-                setSelectedMarker(null);
+                setSelectedMarker(undefined);
                 setImage(
                   await getImage({ path: 'images', url: marker.picture }),
                 );
                 setSelectedMarker(marker);
                 console.log(animValue, ' && ', panelRef);
-                if (animValue !== panelRef) slidingUpPanel.show(350);
+                if (animValue !== panelRef) slidingUpPanel?.show(350);
               }}
             />
           );
@@ -218,6 +232,17 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
           <TouchableOpacity style={styles.actionButton} onPress={onClickList}>
             <Ionicons name="list" size={24} color="white" />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={onClickAddPlace}
+          >
+            <Ionicons name="add" size={24} color="white" />
+          </TouchableOpacity>
+
+          {/* <Button
+            title="dragging"
+            onPress={() => setAllowDragging(!allowDragging)}
+          /> */}
         </View>
       </SafeAreaView>
     </View>

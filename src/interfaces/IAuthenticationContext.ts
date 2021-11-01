@@ -11,7 +11,7 @@ export interface IReset {
 
 
 export interface IAuthenticationContext {
-  user?: null | IUser;
+  user: IUser | undefined;
 
   login: TLoginFC;
   logout: TLogoutFC;
@@ -33,7 +33,7 @@ export type TRegisterFC = (payload: IAuth) => Promise<any>;
 export type TResetPasswordFC = (payload: IReset) => Promise<any>;
 
 export const defaultAuthenticationValue: IAuthenticationContext = {
-  User: null,
+  user: undefined,
 
   login: () => Promise.reject(null),
   logout: () => Promise.reject(null),

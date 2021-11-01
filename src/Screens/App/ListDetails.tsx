@@ -19,6 +19,8 @@ import { NavigationProps } from '../../Navigation/Navigation';
 import { ListContext } from '../../Contexts/ListContext';
 import { TextInput } from '../../Components/TextInput';
 import { IList } from '../../Interfaces/IListContext';
+import { IPlace } from '../../Interfaces/IPlaceContext';
+import { PlaceListItem } from '../../Components/PlaceListItem';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#748B6F';
@@ -45,8 +47,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
   },
+  scrollView: {
+    flex: 0.9,
+    backgroundColor: 'white',
+  },
   content: {
-    flex: 0.7,
+    flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
   },
@@ -129,11 +135,7 @@ export const ListDetails: React.FC<IListDetailsProps> = ({
   useEffect(() => {
     console.log('useEffect params -> ', route.params);
     setList(route.params?.list);
-    (async () => {
-      //   await getLists();
-      // await setLists(await getLists());
-      console.log('hey');
-    })();
+
   }, []);
 
   return (
@@ -151,26 +153,19 @@ export const ListDetails: React.FC<IListDetailsProps> = ({
             </View>
           </View>
         </View>
-        <View style={styles.content}>
-          {/* {lists?.map((list: IList, index: number) => {
-            return (
-              <TouchableOpacity key={index} onPress={() => handleListClick} style={styles.list}>
-                <View style={styles.listTitleRow}>
-                  <Text style={styles.listTitle}>{list.title}</Text>
-                  <AntDesign name="right" size={24} color="black" />
-                </View>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.content}>
+            {list?.places.map((place: string, index: number) => {
+              return (
+                <PlaceListItem placeId={place} key={index} navigation={navigation}/>
+              );
+            })}
+            {/* <View style={styles.bgShape} /> */}
 
-                <Text style={styles.listDescription}>{list.description}</Text>
-
-              </TouchableOpacity>
-            );
-          })} */}
-          {/* <View style={styles.bgShape} /> */}
-
-          <View style={{ height: 40 }} />
-        </View>
-        <View style={styles.footer}></View>
-        {/* {createListModal()} */}
+            <View style={{ height: 40 }} />
+          </View>
+          {/* {createListModal()} */}
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
