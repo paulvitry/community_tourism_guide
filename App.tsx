@@ -7,6 +7,7 @@ import { ImageProvider } from './src/Contexts/ImageContext';
 import { PlaceProvider } from './src/Contexts/PlaceContext';
 import { ListProvider } from './src/Contexts/ListContext';
 import { AlertProvier } from './src/Contexts/AlertContext';
+import { LikeProvider } from './src/Contexts/LikeContext';
 import FlashMessage from 'react-native-flash-message';
 import { NativeBaseProvider } from 'native-base';
 // require('dotenv').config();
@@ -17,15 +18,16 @@ export default function App() {
       <AlertProvier>
         <AuthenticationProvider>
           <ImageProvider>
-            <PlaceProvider>
-
-            <ListProvider>
-            <NativeBaseProvider>
-            <Navigation />
-            <FlashMessage position="top" />
-            </NativeBaseProvider>
-            </ListProvider>
-            </PlaceProvider>
+            <LikeProvider>
+              <PlaceProvider>
+                <ListProvider>
+                  <NativeBaseProvider>
+                    <Navigation />
+                    <FlashMessage position="top" />
+                  </NativeBaseProvider>
+                </ListProvider>
+              </PlaceProvider>
+            </LikeProvider>
           </ImageProvider>
         </AuthenticationProvider>
       </AlertProvier>

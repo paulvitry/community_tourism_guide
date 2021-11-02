@@ -14,7 +14,6 @@ import {
 import firebase from '../Database/firebase';
 import { AuthenticationContext } from './AuthenticationContext';
 import { AlertContext } from './AlertContext';
-import { Alert } from 'react-native';
 
 export const PlaceContext = createContext<IPlaceContext>(defaultPlaceValue);
 
@@ -70,7 +69,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
     await ref.put(blob);
     setStep('Image uploaded.');
     setStep('Fetch collection...');
-    const collection = await firebase.firestore().collection('Places');
+    const collection = firebase.firestore().collection('Places');
     setStep('Collection fetched.');
     setStep('Creating document...');
     await collection

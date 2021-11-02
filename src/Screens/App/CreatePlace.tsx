@@ -152,7 +152,7 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   // const [title, setTitle] = useState<string>();
   // const [description, setDescription] = useState<string>();
   const [selectedPicture, setSelectedPicture] = useState<ImageSourcePropType>();
-  const [existingImage, setExistingImage] = useState();
+  const [existingImage, setExistingImage] = useState<string>();
   const { uploadPicture, getImage } = useContext(ImageContext);
   const { createPlace, getPlaces, editPlace } = useContext(PlaceContext);
   const { user } = useContext(AuthenticationContext);
@@ -269,7 +269,7 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
               <ImageBackground
                 style={styles.imageBackground}
                 source={
-                  existingImage ? { uri: existingImage } : selectedPicture!
+                  existingImage ? { uri: existingImage! } : selectedPicture!
                 }
               ></ImageBackground>
             </TouchableHighlight>

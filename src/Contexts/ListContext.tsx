@@ -43,7 +43,7 @@ export const ListProvider: React.FC = ({ children }) => {
   const createList: TCreateListFC = async (payload: ICreateList) => {
     console.log('createList');
 
-    const collection = await firebase.firestore().collection('Lists');
+    const collection = firebase.firestore().collection('Lists');
     await collection
       .doc()
       .set({

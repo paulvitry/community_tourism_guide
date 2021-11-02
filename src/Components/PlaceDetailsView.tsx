@@ -12,11 +12,12 @@ import {
 } from 'react-native';
 import { AlertContext } from '../Contexts/AlertContext';
 import { ImageContext } from '../Contexts/ImageContext';
+import { LikeContext } from '../Contexts/LikeContext';
 import { IPlace } from '../Interfaces/IPlaceContext';
 import { AddToListModal } from './AddToListModal';
 
 interface IPlaceDetailsViewProps {
-  place: IPlace | undefined;
+  place: IPlace;
 }
 
 const styles = StyleSheet.create({
@@ -76,10 +77,21 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
   const { getImage } = useContext(ImageContext);
   const { Alerts } = useContext(AlertContext);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const { isLiked, like, unlike } = useContext(LikeContext);
+  const [liked, setLiked] = useState<boolean | undefined>(undefined);
   // const { addPlaceToList, lists, getLists } = useContext(ListContext);
   // const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    console.log('-------------->use effect');
+    console.log('liked == ', liked);
+    if (liked === undefined && place?.id) {
+      console.log('liked === undefined');
+      console.log(place.id);
+      (async () => {
+        setLiked(await isLiked(place?.id));
+      })();
+    }
     if (place?.picture) {
       (async () => {
         setImage(await getImage({ path: 'images', url: place!.picture }));
@@ -167,8 +179,30 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
 
   const openShare = async () => {
     await Share.share({
-      message: `${place?.title!}\n${place?.description!}\nAddress: ${place?.location?.line1!}, ${place?.location?.city!} ${place?.location?.postalCode!}, ${place?.location?.country!}\nWebsite: ${place?.website!}\nPhone: ${place?.phone!}\nlat: ${place?.coordinate.latitude}\nlng: ${place?.coordinate.longitude}\n`,
+      message: `${place?.title!}\n${place?.description!}\nAddress: ${place
+        ?.location?.line1!}, ${place?.location?.city!} ${place?.location
+        ?.postalCode!}, ${place?.location
+        ?.country!}\nWebsite: ${place?.website!}\nPhone: ${place?.phone!}\nlat: ${
+        place?.coordinate.latitude
+      }\nlng: ${place?.coordinate.longitude}\n`,
     });
+  };
+
+  const handleLike = async () => {
+    console.log('handle like');
+    await like({ postId: place?.id!, postType: 'place' });
+    console.log('after like');
+    setLiked(undefined);
+    setLiked(await isLiked(place?.id!));
+    console.log('liked reset');
+  };
+
+  const handleUnlike = async () => {
+    console.log('unlike');
+    await unlike(place?.id!);
+    setLiked(undefined);
+    setLiked(await isLiked(place?.id!));
+    console.log('end unlike');
   };
 
   return (
@@ -188,8 +222,15 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
             <TouchableOpacity style={styles.action} onPress={openShare}>
               <Entypo name="share" size={24} color="blue" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.action}>
-              <Entypo name="heart-outlined" size={24} color="blue" />
+            <TouchableOpacity
+              style={styles.action}
+              onPress={() => (liked ? handleUnlike() : handleLike())}
+            >
+              {liked ? (
+                <Entypo name="heart" size={24} color="blue" />
+              ) : (
+                <Entypo name="heart-outlined" size={24} color="blue" />
+              )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.action} onPress={openPhone}>
               <Entypo name="phone" size={24} color="blue" />
