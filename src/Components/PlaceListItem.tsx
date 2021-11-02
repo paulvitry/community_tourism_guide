@@ -135,7 +135,6 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
                     onPress: async () => {
                       console.log('over');
                       await deletePlace(place?.id!);
-                      await getUserPlaces();
                     },
                   },
                 ])

@@ -98,6 +98,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
       });
 
     (async () => {
+      setPlaces(undefined);
       await getPlaces();
     })();
 
