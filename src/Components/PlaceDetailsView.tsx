@@ -85,7 +85,7 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
   useEffect(() => {
     console.log('-------------->use effect');
     console.log('liked == ', liked);
-    if (liked === undefined && place?.id) {
+    if (place?.id) {
       console.log('liked === undefined');
       console.log(place.id);
       (async () => {

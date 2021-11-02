@@ -56,6 +56,11 @@ export const LikeProvider: React.FC = ({ children }) => {
       .catch(e => {
         console.log(e);
       });
+
+    (async () => {
+      setUserLikes(undefined);
+      setUserLikes(await getUserLikes());
+    })();
     return tmpLike;
   };
 
@@ -77,20 +82,28 @@ export const LikeProvider: React.FC = ({ children }) => {
       .collection('Likes')
       .doc(likeId[0])
       .delete();
+    (async () => {
+      setUserLikes(undefined);
+      setUserLikes(await getUserLikes());
+    })();
     return res;
   };
 
   const isLiked: TIsLikedFC = async (payload: string) => {
     console.log('------------------_> isLiked');
-    const snapshot = await firebase
-      .firestore()
-      .collection('Likes')
-      .where('userId', '==', user?.id!)
-      .where('postId', '==', payload!)
-      .get();
-
-    console.log(snapshot.docs.map(doc => console.log(doc.data)));
-    if (snapshot.docs.length !== 0) {
+    const tmpLike = (
+      await firebase
+        .firestore()
+        .collection('Likes')
+        .where('userId', '==', user?.id!)
+        .where('postId', '==', payload!)
+        .get()
+    ).docs.map(doc => {
+      return doc.data;
+    });
+    console.log('--------------_> snapshot  : ');
+    console.log(tmpLike);
+    if (tmpLike.length > 0) {
       console.log('item is like');
       return true;
     }

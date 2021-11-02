@@ -23,6 +23,7 @@ import { EvilIcons } from '@expo/vector-icons';
 import { PlaceDetailsView } from '../../Components/PlaceDetailsView';
 import { IPlace } from '../../Interfaces/IPlaceContext';
 import { AddToListModal } from '../../Components/AddToListModal';
+import { LikeContext } from '../../Contexts/LikeContext';
 
 type IHomeProps = NavigationProps<'Home'>;
 
@@ -115,7 +116,8 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel | null>(
     null,
   );
-  const [image, setImage] = useState(null);
+  // const { isLiked } = useContext(LikeContext);
+  // const [liked, setLiked] = useState<boolean>();
 
   const [allowDragging, setAllowDragging] = useState(true);
   // const [animValue] = useState(new Animated.Value(0));
@@ -166,7 +168,8 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
       >
         <View style={{ flex: 1 }}>
           <PlaceDetailsView
-            place={selectedMarker}
+            place={selectedMarker!}
+            
             // setModalVisible={setModalVisible}
           />
         </View>
@@ -202,9 +205,9 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
               description={marker.description}
               onPress={async () => {
                 setSelectedMarker(undefined);
-                setImage(
-                  await getImage({ path: 'images', url: marker.picture }),
-                );
+                // setLiked(
+                //   await isLiked(marker.id),
+                // );
                 setSelectedMarker(marker);
                 console.log(animValue, ' && ', panelRef);
                 if (animValue !== panelRef) slidingUpPanel?.show(350);

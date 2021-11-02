@@ -6,6 +6,7 @@ import {
   Button,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -14,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 import { ImageContext } from '../../Contexts/ImageContext';
+import { useStyledSystemPropsResolver } from 'native-base';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#748B6F';
@@ -33,8 +35,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: ACTION_BTN_BG,
   },
+  scrollView: {
+    flex: 0.9,
+  },
   content: {
-    flex: 0.7,
+    flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
   },
@@ -180,9 +185,19 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
     return (
       <View style={{ width: '100%', alignItems: 'center' }}>
         {/* <View style={styles.divider} /> */}
-        <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UserPlaces')}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => navigation.navigate('UserPlaces')}
+        >
           <Entypo name="location" size={24} color="white" />
           <Text style={styles.textActions}>My places</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => navigation.navigate('UserLikes')}
+        >
+          <Entypo name="heart" size={24} color="white" />
+          <Text style={styles.textActions}>Likes</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton}>
           <Entypo name="pencil" size={24} color="white" />
@@ -213,16 +228,20 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
             <Button title="back" onPress={onClickHome} />
           </View>
         </View>
-        <View style={styles.content}>
-          <View style={styles.bgShape} />
-          <TouchableOpacity style={styles.profilePicture} onPress={handleImage}>
-            <Image source={{ uri: image }} style={styles.image} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>{user!.displayName}</Text>
-          <View style={{ height: 40 }} />
-          {renderActions()}
-        </View>
-        <View style={styles.footer}></View>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.content}>
+            <View style={styles.bgShape} />
+            <TouchableOpacity
+              style={styles.profilePicture}
+              onPress={handleImage}
+            >
+              <Image source={{ uri: image }} style={styles.image} />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>{user!.displayName}</Text>
+            <View style={{ height: 40 }} />
+            {renderActions()}
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );

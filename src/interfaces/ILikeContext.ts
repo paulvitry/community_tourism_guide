@@ -23,7 +23,7 @@ export interface ICreateLike {
 export type TLikeFC = (payload: ICreateLike) => Promise<any>;
 export type TUnlikeFC = (payload: string) => Promise<any>;
 export type TIsLikedFC = (payload: string) => Promise<any>;
-export type TGetUserLikesFC = (payload: string) => Promise<any>;
+export type TGetUserLikesFC = () => Promise<any>;
 
 
 export const defaultLikeValue: ILikeContext = {
