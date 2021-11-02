@@ -94,7 +94,7 @@ export const SignUp: React.FC<ISignUpProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>SignUp</Text>
+        <Text style={styles.headerTitle}>Sign Up</Text>
       </View>
 
       <View style={styles.content}>

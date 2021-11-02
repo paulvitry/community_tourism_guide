@@ -15,6 +15,7 @@ import { CreatePlace } from '../Screens/App/CreatePlace';
 import { List } from '../Screens/App/List';
 import { ListDetails } from '../Screens/App/ListDetails';
 import { PlaceDetails } from '../Screens/App/PlaceDetails';
+import { UserPlaces } from '../Screens/App/UserPlaces';
 
 interface INavigationProps {}
 
@@ -28,6 +29,7 @@ export type NavigationParamList = {
   List: React.FC;
   ListDetails: React.FC;
   PlaceDetails: React.FC;
+  UserPlaces: React.FC;
 };
 
 // type TabParamList = {
@@ -78,6 +80,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           <Stack.Screen name="List" component={List} />
           <Stack.Screen name="ListDetails" component={ListDetails} />
           <Stack.Screen name="PlaceDetails" component={PlaceDetails} />
+          <Stack.Screen name="UserPlaces" component={UserPlaces} />
         </Stack.Navigator>
       ) : (
         // <Stack.Navigator

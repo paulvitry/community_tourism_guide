@@ -4,23 +4,16 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput as TI,
-  KeyboardTypeOptions,
   Image,
   TouchableOpacity,
-  Modal,
-  Alert,
-  ScrollView,
-  TouchableHighlight,
+  Platform,
+  Linking,
+  Share,
 } from 'react-native';
-import SlidingUpPanel from 'rn-sliding-up-panel';
+import { AlertContext } from '../Contexts/AlertContext';
 import { ImageContext } from '../Contexts/ImageContext';
-import { ListContext } from '../Contexts/ListContext';
-import { IList } from '../Interfaces/IListContext';
 import { IPlace } from '../Interfaces/IPlaceContext';
 import { AddToListModal } from './AddToListModal';
-
-const ACTION_BTN_BG = '#748B6F';
 
 interface IPlaceDetailsViewProps {
   place: IPlace | undefined;
@@ -71,6 +64,9 @@ const styles = StyleSheet.create({
     minHeight: 50,
     alignItems: 'center',
   },
+  text: {
+    marginLeft: 10,
+  },
 });
 
 export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
@@ -78,6 +74,7 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
 }) => {
   const [image, setImage] = useState(null);
   const { getImage } = useContext(ImageContext);
+  const { Alerts } = useContext(AlertContext);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   // const { addPlaceToList, lists, getLists } = useContext(ListContext);
   // const [modalVisible, setModalVisible] = useState(false);
@@ -90,6 +87,90 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
     }
   });
 
+  const openGps = () => {
+    const scheme = Platform.select({
+      ios: 'maps:0,0?q=',
+      android: 'geo:0,0?q=',
+    });
+    const latLng = `${place?.coordinate.latitude},${place?.coordinate.longitude}`;
+    const label = place?.title;
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`,
+    });
+    Linking.canOpenURL(url!).then(supported => {
+      if (supported) {
+        Linking.openURL(url!);
+      } else {
+        Alerts.warning({
+          title: "Oops... We can't open the url",
+          message: '',
+          duration: 4000,
+        });
+        console.log("Don't know how to open URI: " + url);
+      }
+    });
+  };
+
+  const openPhone = () => {
+    if (!place?.phone) {
+      console.log('no phone number');
+      Alerts.warning({
+        title: 'Oops... It looks like there is no phone number.',
+        message: '',
+        duration: 4000,
+      });
+      return;
+    }
+    Linking.canOpenURL(`tel:${place?.phone}`).then(supported => {
+      if (supported) {
+        Linking.openURL(`tel:${place?.phone}`);
+      } else {
+        Alerts.warning({
+          title: "Oops... We can't open the url",
+          message: '',
+          duration: 4000,
+        });
+        console.log("Don't know how to open URI: " + `tel:${place?.phone}`);
+      }
+    });
+  };
+
+  const openWebsite = () => {
+    if (!place?.website) {
+      console.log('no websiter');
+      Alerts.warning({
+        title: 'Oops... It looks like there is no website.',
+        message: '',
+        duration: 4000,
+      });
+      return;
+    }
+
+    let url = '';
+    if (place?.website.includes('http')) url = place?.website;
+    else url = 'http://' + place?.website;
+
+    Linking.canOpenURL(`${url}`).then(supported => {
+      if (supported) {
+        Linking.openURL(`${url}`);
+      } else {
+        Alerts.warning({
+          title: "Oops... We can't open the url",
+          message: '',
+          duration: 4000,
+        });
+        console.log("Don't know how to open URI: " + `${url}`);
+      }
+    });
+  };
+
+  const openShare = async () => {
+    await Share.share({
+      message: `${place?.title!}\n${place?.description!}\nAddress: ${place?.location?.line1!}, ${place?.location?.city!} ${place?.location?.postalCode!}, ${place?.location?.country!}\nWebsite: ${place?.website!}\nPhone: ${place?.phone!}\nlat: ${place?.coordinate.latitude}\nlng: ${place?.coordinate.longitude}\n`,
+    });
+  };
+
   return (
     <View style={styles.container}>
       {place! && (
@@ -101,16 +182,16 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
           </View>
           <View style={styles.divider} />
           <View style={styles.contentAction}>
-            <TouchableOpacity style={styles.action}>
+            <TouchableOpacity style={styles.action} onPress={openGps}>
               <Entypo name="direction" size={24} color="blue" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.action}>
+            <TouchableOpacity style={styles.action} onPress={openShare}>
               <Entypo name="share" size={24} color="blue" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.action}>
               <Entypo name="heart-outlined" size={24} color="blue" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.action}>
+            <TouchableOpacity style={styles.action} onPress={openPhone}>
               <Entypo name="phone" size={24} color="blue" />
             </TouchableOpacity>
             <TouchableOpacity
@@ -125,21 +206,35 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
           </View>
           <View style={styles.divider} />
           <View style={styles.content}>
-            <TouchableOpacity style={styles.infos}>
+            <TouchableOpacity style={styles.infos} onPress={openGps}>
               <Entypo name="location-pin" size={24} color="blue" />
-              <Text>Address</Text>
+              <Text style={styles.text}>
+                {place?.location
+                  ? place?.location?.line1 +
+                    ', ' +
+                    place?.location?.city +
+                    ' ' +
+                    place?.location?.postalCode +
+                    ', ' +
+                    place?.location?.country
+                  : 'No address was filled.'}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.infos}>
               <Entypo name="clock" size={24} color="blue" />
-              <Text>Open Hours</Text>
+              <Text style={styles.text}>Open Hours</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.infos}>
+            <TouchableOpacity style={styles.infos} onPress={openWebsite}>
               <AntDesign name="earth" size={24} color="blue" />
-              <Text>Web site</Text>
+              <Text style={styles.text}>
+                {place?.website ? place?.website : 'No website was filled.'}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.infos}>
+            <TouchableOpacity style={styles.infos} onPress={openPhone}>
               <Entypo name="phone" size={24} color="blue" />
-              <Text>Phone</Text>
+              <Text style={styles.text}>
+                {place?.phone ? place?.phone : 'No phone number was filled.'}
+              </Text>
             </TouchableOpacity>
             <Text>{place.id}</Text>
 

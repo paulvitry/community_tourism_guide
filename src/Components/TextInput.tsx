@@ -17,6 +17,8 @@ interface ITextInputProps {
   isRequired?: boolean;
   isInvalid?: boolean;
   errorMessage?: string;
+  placeholder?: string;
+  defaultValue?: string;
 }
 
 const styles = StyleSheet.create({
@@ -30,10 +32,12 @@ export const TextInput: React.FC<ITextInputProps> = ({
   onChangeText,
   keyboardType = 'default',
   secureTextEntry = false,
-  helper = null,
+  helper = undefined,
   isRequired = false,
   isInvalid = false,
-  errorMessage = null,
+  errorMessage = undefined,
+  placeholder = undefined,
+  defaultValue = undefined,
 }) => {
   return (
     <FormControl isRequired={isRequired} isInvalid={isInvalid} style={styles.textInput}>
@@ -41,11 +45,12 @@ export const TextInput: React.FC<ITextInputProps> = ({
         {label.charAt(0).toUpperCase() + label.slice(1)}
       </FormControl.Label>
       <Input
-        placeholder={'Enter ' + label.toLowerCase()}
+        placeholder={placeholder ? placeholder : 'Enter ' + label.toLowerCase()}
         onChangeText={value => onChangeText(value)}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
         size="lg"
+        defaultValue={defaultValue}
       />
       {helper && (
         <FormControl.HelperText _text={{ fontSize: 'xs' }}>

@@ -1,22 +1,28 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import {
   defaultPlaceValue,
   IPlace,
   IPlaceContext,
   TCreatePlaceFC,
+  TDeletePlaceFC,
+  TEditPlaceFC,
   TGetPlaceByIdFC,
   TGetPlacesFC,
+  TGetUserPlacesFC,
 } from '../Interfaces/IPlaceContext';
 
 import firebase from '../Database/firebase';
-import { TTakePictureFC } from '../Interfaces/IImageContext';
-// import { AlertContext } from './AlertContext';
+import { AuthenticationContext } from './AuthenticationContext';
+import { AlertContext } from './AlertContext';
+import { Alert } from 'react-native';
 
 export const PlaceContext = createContext<IPlaceContext>(defaultPlaceValue);
 
 export const PlaceProvider: React.FC = ({ children }) => {
-  //   const { Alerts } = useContext(AlertContext);
+  const { Alerts } = useContext(AlertContext);
   const [places, setPlaces] = useState<Array<IPlace>>();
+  const { user } = useContext(AuthenticationContext);
+  const [userPlaces, setUserPlaces] = useState<Array<IPlace>>();
 
   const getPlaces: TGetPlacesFC = async () => {
     console.log('getPlaces');
@@ -30,7 +36,11 @@ export const PlaceProvider: React.FC = ({ children }) => {
   };
 
   const getPlaceById: TGetPlaceByIdFC = async (payload: string) => {
-    const snapshot = await firebase.firestore().collection('Places').doc(payload).get();
+    const snapshot = await firebase
+      .firestore()
+      .collection('Places')
+      .doc(payload)
+      .get();
     const place: IPlace = { ...snapshot.data(), id: snapshot.id };
     console.log('place: ', place);
 
@@ -62,22 +72,29 @@ export const PlaceProvider: React.FC = ({ children }) => {
       .set({
         creator: payload.creator,
         title: payload.title,
-        description: payload.description,
+        description: payload.description || null,
         picture: path,
         coordinate: {
           latitude: payload.latitude,
           longitude: payload.longitude,
         },
-        line1: payload.line1,
-        city: payload.city,
-        postalCode: payload.postalCode,
-        country: payload.country,
-        website: payload.website,
-        phone: payload.phone,
+        location: {
+          line1: payload.line1 || null,
+          city: payload.city || null,
+          postalCode: payload.postalCode || null,
+          country: payload.country || null,
+        },
+        website: payload.website || null,
+        phone: payload.phone || null,
         created_at: Date.now(),
       })
       .catch(e => {
         console.log(e);
+        Alerts.warning({
+          title: 'Oops.. Something went wrong during the creation.',
+          message: '',
+          duration: 4000,
+        });
       });
 
     (async () => {
@@ -90,14 +107,128 @@ export const PlaceProvider: React.FC = ({ children }) => {
     console.log('yeah');
   };
 
+  const editPlace: TEditPlaceFC = async payload => {
+    let path = payload?.picture;
+    await firebase
+      .firestore()
+      .collection('Places')
+      .doc(payload.id)
+      .get()
+      .then(async doc => {
+        if (doc?.data()?.picture !== payload.picture) {
+          path =
+            payload?.picture?.split('/')[
+              payload.picture!.split('/').length - 1
+            ];
+
+          const response = await fetch(payload.picture!);
+          const blob = await response.blob();
+
+          var ref = firebase
+            .storage()
+            .ref()
+            .child('images/' + path);
+
+          ref.put(blob);
+        }
+      });
+
+    const snapshot = await firebase
+      .firestore()
+      .collection('Places')
+      .doc(payload.id)
+      .update({
+        creator: payload.creator,
+        title: payload.title,
+        description: payload.description,
+        picture: path,
+        coordinate: {
+          latitude: payload.latitude,
+          longitude: payload.longitude,
+        },
+        location: {
+          line1: payload?.line1 || null!,
+          city: payload?.city || null,
+          postalCode: payload?.postalCode || null,
+          country: payload?.country || null,
+        },
+        website: payload.website || null,
+        phone: payload.phone || null,
+        updated_at: Date.now(),
+      })
+      .catch(e => {
+        console.log(e);
+        Alerts.warning({
+          title: 'Oops.. Something went wrong during the edition.',
+          message: '',
+          duration: 4000,
+        });
+      })
+      .then(() => {
+        Alerts.success({
+          title: 'Edit successfuly.',
+          message: '',
+          duration: 4000,
+        });
+      });
+    return snapshot;
+  };
+
+  const getUserPlaces: TGetUserPlacesFC = async () => {
+    const snapshot = await firebase
+      .firestore()
+      .collection('Places')
+      .where('creator', '==', user?.id)
+      .get();
+
+    const tmpPlaces: IPlace = snapshot.docs.map(doc => {
+      return { ...doc.data(), id: doc.id };
+    });
+    console.log('tmpPlaces = ', tmpPlaces);
+    setUserPlaces(tmpPlaces);
+    return tmpPlaces;
+  };
+
+  const deletePlace: TDeletePlaceFC = async payload => {
+    const snapshot = await firebase
+      .firestore()
+      .collection('Places')
+      .doc(payload)
+      .delete()
+      .then(() => {
+        Alerts.success({
+          title: 'Place deleted successfuly',
+          message: '',
+          duration: 4000,
+        });
+      })
+      .catch(e => {
+        console.log(e);
+        Alerts.warning({
+          title: 'Oops... An error occured during the deletion',
+          message: '',
+          duration: 4000,
+        });
+      });
+    (async () => {
+      setUserPlaces(undefined);
+      await getUserPlaces();
+    })();
+    return snapshot;
+  };
+
   return (
     <PlaceContext.Provider
       value={{
         places,
+        userPlaces,
 
         createPlace,
         getPlaces,
         getPlaceById,
+        getUserPlaces,
+        editPlace,
+        deletePlace,
       }}
     >
       {children}

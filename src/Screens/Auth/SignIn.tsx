@@ -98,7 +98,7 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>SignIn</Text>
+        <Text style={styles.headerTitle}>Sign In</Text>
       </View>
 
       <View style={styles.content}>

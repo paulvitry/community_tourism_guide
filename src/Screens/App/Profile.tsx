@@ -180,6 +180,10 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
     return (
       <View style={{ width: '100%', alignItems: 'center' }}>
         {/* <View style={styles.divider} /> */}
+        <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UserPlaces')}>
+          <Entypo name="location" size={24} color="white" />
+          <Text style={styles.textActions}>My places</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton}>
           <Entypo name="pencil" size={24} color="white" />
           <Text style={styles.textActions}>Modify username</Text>
