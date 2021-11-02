@@ -31,7 +31,10 @@ export const PlaceProvider: React.FC = ({ children }) => {
     ).docs.map(doc => {
       return { ...doc.data(), id: doc.id };
     });
-    setPlaces(tmpPlaces);
+    (async () => {
+      setPlaces(undefined);
+      setPlaces(tmpPlaces);
+    })();
     return tmpPlaces;
   };
 
@@ -50,9 +53,9 @@ export const PlaceProvider: React.FC = ({ children }) => {
     return place;
   };
 
-  const createPlace: TCreatePlaceFC = async payload => {
-    console.log('createPlace');
-    console.log(payload);
+  const createPlace: TCreatePlaceFC = async (payload, setStep) => {
+    setStep('Start creating new place...');
+    setStep('Uploading image...');
     const path =
       payload.picture!.split('/')[payload.picture!.split('/').length - 1];
 
@@ -64,9 +67,12 @@ export const PlaceProvider: React.FC = ({ children }) => {
       .ref()
       .child('images/' + path);
 
-    ref.put(blob);
-
+    await ref.put(blob);
+    setStep('Image uploaded.');
+    setStep('Fetch collection...');
     const collection = await firebase.firestore().collection('Places');
+    setStep('Collection fetched.');
+    setStep('Creating document...');
     await collection
       .doc()
       .set({
@@ -97,10 +103,13 @@ export const PlaceProvider: React.FC = ({ children }) => {
         });
       });
 
+    setStep('Document created.');
+    setStep('Fetch places...');
     (async () => {
       setPlaces(undefined);
       await getPlaces();
     })();
+    setStep('Places fetched.');
 
     // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaa');
     // console.log('collection = ', collection);
@@ -108,7 +117,23 @@ export const PlaceProvider: React.FC = ({ children }) => {
     console.log('yeah');
   };
 
-  const editPlace: TEditPlaceFC = async payload => {
+  const getUserPlaces: TGetUserPlacesFC = async () => {
+    const snapshot = await firebase
+      .firestore()
+      .collection('Places')
+      .where('creator', '==', user?.id)
+      .get();
+
+    const tmpPlaces: IPlace = snapshot.docs.map(doc => {
+      return { ...doc.data(), id: doc.id };
+    });
+    console.log('tmpPlaces = ', tmpPlaces);
+    setUserPlaces(tmpPlaces);
+    return tmpPlaces;
+  };
+
+  const editPlace: TEditPlaceFC = async (payload, setStep) => {
+    setStep('Start editing place...');
     let path = payload?.picture;
     await firebase
       .firestore()
@@ -117,6 +142,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
       .get()
       .then(async doc => {
         if (doc?.data()?.picture !== payload.picture) {
+          setStep('Fetching new image');
           path =
             payload?.picture?.split('/')[
               payload.picture!.split('/').length - 1
@@ -129,11 +155,13 @@ export const PlaceProvider: React.FC = ({ children }) => {
             .storage()
             .ref()
             .child('images/' + path);
+          setStep('Uplading new image...');
 
-          ref.put(blob);
+          await ref.put(blob);
+          setStep('Image uploaded.');
         }
       });
-
+    setStep('Editing document');
     const snapshot = await firebase
       .firestore()
       .collection('Places')
@@ -172,22 +200,14 @@ export const PlaceProvider: React.FC = ({ children }) => {
           duration: 4000,
         });
       });
+    setStep('Document edited.');
+    setStep('Fetching places...');
+    (async () => {
+      setUserPlaces(undefined);
+      await getUserPlaces();
+    })();
+    setStep('Places fetched.');
     return snapshot;
-  };
-
-  const getUserPlaces: TGetUserPlacesFC = async () => {
-    const snapshot = await firebase
-      .firestore()
-      .collection('Places')
-      .where('creator', '==', user?.id)
-      .get();
-
-    const tmpPlaces: IPlace = snapshot.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
-    });
-    console.log('tmpPlaces = ', tmpPlaces);
-    setUserPlaces(tmpPlaces);
-    return tmpPlaces;
   };
 
   const deletePlace: TDeletePlaceFC = async payload => {

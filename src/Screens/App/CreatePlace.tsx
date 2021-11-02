@@ -11,6 +11,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     height: 300,
     backgroundColor: 'grey',
+    borderRadius: 5,
   },
   actionButton: {
     width: '90%',
@@ -90,9 +92,41 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 24,
   },
+  actionButtonDisabled: {
+    width: '90%',
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'grey',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   topFooter: {
     height: 40,
     marginBottom: 20,
+  },
+  loading: {
+    flexDirection: 'row',
+  },
+  loadingText: {
+    color: 'black',
+    marginLeft: 10,
+  },
+  touchableImage: {
+    backgroundColor: 'grey',
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  touchableImageEmpty: {
+    backgroundColor: 'grey',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: 'red',
+    borderRadius: 5,
+  },
+  textError: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
   },
 });
 
@@ -118,9 +152,12 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   // const [title, setTitle] = useState<string>();
   // const [description, setDescription] = useState<string>();
   const [selectedPicture, setSelectedPicture] = useState<ImageSourcePropType>();
-  const { uploadPicture } = useContext(ImageContext);
+  const [existingImage, setExistingImage] = useState();
+  const { uploadPicture, getImage } = useContext(ImageContext);
   const { createPlace, getPlaces, editPlace } = useContext(PlaceContext);
   const { user } = useContext(AuthenticationContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [step, setStep] = useState<string>();
   const onBackClick = async () => {
     navigation.goBack();
   };
@@ -143,6 +180,11 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
         postalCode: route.params?.data?.location?.postalCode,
         country: route.params?.data?.location?.country,
       });
+      (async () => {
+        setExistingImage(
+          await getImage({ path: 'images', url: route.params.data?.picture! }),
+        );
+      })();
     } else if (route.params?.coordinate!) {
       setForm({
         ...form,
@@ -156,18 +198,28 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   }, []);
 
   const onClick = async () => {
-    if (form.id) {
-      await editPlace(form);
+    setLoading(true);
+    if (form?.id) {
+      await editPlace(form, setStep);
     } else {
-      await createPlace(form);
+      await createPlace(form, setStep);
     }
     await getPlaces();
+    setLoading(false);
     navigation.goBack();
   };
 
   useEffect(() => {
     console.log(route.params);
   }, []);
+
+  const isDisabled = () => {
+    if (loading) return true;
+    if (!form.longitude || !form.latitude || !form.title || !form.picture) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -191,6 +243,8 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
               keyboardType="default"
               isRequired
               defaultValue={form.title}
+              isInvalid={!form.title}
+              errorMessage={'Must be filled'}
             />
 
             <TextInput
@@ -200,19 +254,28 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
               defaultValue={form.description}
             />
 
-            <Text style={{ fontWeight: 'bold' }}>
+            <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>
               Select photo
               <Text style={{ color: 'red', fontWeight: 'normal' }}>*</Text>
             </Text>
             <TouchableHighlight
               onPress={onSelectMedias}
-              style={{ backgroundColor: 'grey' }}
+              style={
+                form.picture
+                  ? styles.touchableImage
+                  : styles.touchableImageEmpty
+              }
             >
               <ImageBackground
                 style={styles.imageBackground}
-                source={selectedPicture!}
+                source={
+                  existingImage ? { uri: existingImage } : selectedPicture!
+                }
               ></ImageBackground>
             </TouchableHighlight>
+            {!form.picture && (
+              <Text style={styles.textError}>{'Must be filled'}</Text>
+            )}
 
             <TextInput
               label="Latitude"
@@ -222,6 +285,8 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
               keyboardType="default"
               isRequired
               defaultValue={form.latitude?.toString()}
+              isInvalid={!form.latitude}
+              errorMessage={'Must be filled'}
             />
             <TextInput
               label="Longitude"
@@ -231,6 +296,8 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
               keyboardType="default"
               isRequired
               defaultValue={form.longitude?.toString()}
+              isInvalid={!form.longitude}
+              errorMessage={'Must be filled'}
             />
             <TextInput
               label="Line1"
@@ -278,8 +345,21 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
 
           <View style={styles.footer}>
             <View style={styles.topFooter}></View>
-            <TouchableHighlight style={styles.actionButton} onPress={onClick}>
-              <Text style={styles.actionButtonText}>Publish</Text>
+            <TouchableHighlight
+              style={
+                isDisabled() ? styles.actionButtonDisabled : styles.actionButton
+              }
+              onPress={onClick}
+              disabled={isDisabled()}
+            >
+              {loading ? (
+                <View style={styles.loading}>
+                  <ActivityIndicator size="small" color="black" />
+                  <Text style={styles.loadingText}>{step}</Text>
+                </View>
+              ) : (
+                <Text style={styles.actionButtonText}>Publish</Text>
+              )}
             </TouchableHighlight>
           </View>
         </ScrollView>

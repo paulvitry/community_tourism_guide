@@ -60,8 +60,8 @@ export interface IEditPlace {
 }
 
 export type TGetPlacesFC = () => Promise<any>;
-export type TCreatePlaceFC = (payload: ICreatePlace) => Promise<any>;
-export type TEditPlaceFC = (payload: IEditPlace) => Promise<any>;
+export type TCreatePlaceFC = (payload: ICreatePlace, setStep: React.Dispatch<React.SetStateAction<string>>) => Promise<any>;
+export type TEditPlaceFC = (payload: IEditPlace, setStep: React.Dispatch<React.SetStateAction<string>>) => Promise<any>;
 export type TGetPlaceByIdFC = (payload: string) => Promise<any>;
 export type TGetUserPlacesFC = () => Promise<any>;
 export type TDeletePlaceFC = (payload: string) => Promise<any>;
