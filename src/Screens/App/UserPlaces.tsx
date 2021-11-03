@@ -1,11 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, View, Text, Button, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
@@ -13,7 +7,7 @@ import { PlaceListItem } from '../../Components/PlaceListItem';
 import { PlaceContext } from '../../Contexts/PlaceContext';
 // import firebase from '../../database/firebase';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 type IUserPlacesProps = NavigationProps<'List'>;
 
@@ -128,7 +122,7 @@ export const UserPlaces: React.FC<IUserPlacesProps> = ({
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={['#748B6F', '#748B6F', 'white', 'white']}
+      colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
@@ -144,6 +138,7 @@ export const UserPlaces: React.FC<IUserPlacesProps> = ({
           <View style={styles.content}>
             {userPlaces ? (
               userPlaces?.map((place, index: number) => {
+                console.log('userPLaces should map : ', userPlaces);
                 return (
                   <PlaceListItem
                     data={place}
@@ -154,7 +149,9 @@ export const UserPlaces: React.FC<IUserPlacesProps> = ({
                 );
               })
             ) : (
-              <Text>{"You didn't created any place yet"}</Text>
+              <View>
+                <Text>{"You didn't created any place yet"}</Text>
+              </View>
             )}
             {/* <View style={styles.bgShape} /> */}
 

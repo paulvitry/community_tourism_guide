@@ -9,6 +9,7 @@ import {
   Platform,
   Linking,
   Share,
+  ScrollView,
 } from 'react-native';
 import { AlertContext } from '../Contexts/AlertContext';
 import { ImageContext } from '../Contexts/ImageContext';
@@ -67,6 +68,11 @@ const styles = StyleSheet.create({
   },
   text: {
     marginLeft: 10,
+  },
+  scrollView: {
+    width: '100%',
+    height: '100%',
+    // backgroundColor: 'red',
   },
 });
 
@@ -139,7 +145,7 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
         Linking.openURL(`tel:${place?.phone}`);
       } else {
         Alerts.warning({
-          title: "Oops... We can't open the url",
+          title: 'Oops... It looks like it is a bad phone number.',
           message: '',
           duration: 4000,
         });
@@ -210,81 +216,85 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
       {place! && (
         <View>
           <Image style={styles.image} source={{ uri: image! }} />
-          <View style={styles.content}>
-            <Text style={styles.title}>{place.title}</Text>
-            <Text>{place.description}</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.contentAction}>
-            <TouchableOpacity style={styles.action} onPress={openGps}>
-              <Entypo name="direction" size={24} color="blue" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.action} onPress={openShare}>
-              <Entypo name="share" size={24} color="blue" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.action}
-              onPress={() => (liked ? handleUnlike() : handleLike())}
-            >
-              {liked ? (
-                <Entypo name="heart" size={24} color="blue" />
-              ) : (
-                <Entypo name="heart-outlined" size={24} color="blue" />
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.action} onPress={openPhone}>
-              <Entypo name="phone" size={24} color="blue" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.action}
-              onPress={() => {
-                setModalVisible(true);
-                // setAllowDragging(false);
-              }}
-            >
-              <Entypo name="add-to-list" size={24} color="blue" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.content}>
-            <TouchableOpacity style={styles.infos} onPress={openGps}>
-              <Entypo name="location-pin" size={24} color="blue" />
-              <Text style={styles.text}>
-                {place?.location
-                  ? place?.location?.line1 +
-                    ', ' +
-                    place?.location?.city +
-                    ' ' +
-                    place?.location?.postalCode +
-                    ', ' +
-                    place?.location?.country
-                  : 'No address was filled.'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.infos}>
-              <Entypo name="clock" size={24} color="blue" />
-              <Text style={styles.text}>Open Hours</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.infos} onPress={openWebsite}>
-              <AntDesign name="earth" size={24} color="blue" />
-              <Text style={styles.text}>
-                {place?.website ? place?.website : 'No website was filled.'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.infos} onPress={openPhone}>
-              <Entypo name="phone" size={24} color="blue" />
-              <Text style={styles.text}>
-                {place?.phone ? place?.phone : 'No phone number was filled.'}
-              </Text>
-            </TouchableOpacity>
-            <Text>{place.id}</Text>
+          <ScrollView style={styles.scrollView}>
+            {/* <View style={{ minHeight: '100%' }}> */}
+            <View style={styles.content}>
+              <Text style={styles.title}>{place.title}</Text>
+              <Text>{place.description}</Text>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.contentAction}>
+              <TouchableOpacity style={styles.action} onPress={openGps}>
+                <Entypo name="direction" size={24} color="blue" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.action} onPress={openShare}>
+                <Entypo name="share" size={24} color="blue" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.action}
+                onPress={() => (liked ? handleUnlike() : handleLike())}
+              >
+                {liked ? (
+                  <Entypo name="heart" size={24} color="blue" />
+                ) : (
+                  <Entypo name="heart-outlined" size={24} color="blue" />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.action} onPress={openPhone}>
+                <Entypo name="phone" size={24} color="blue" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.action}
+                onPress={() => {
+                  setModalVisible(true);
+                  // setAllowDragging(false);
+                }}
+              >
+                <Entypo name="add-to-list" size={24} color="blue" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.content}>
+              <TouchableOpacity style={styles.infos} onPress={openGps}>
+                <Entypo name="location-pin" size={24} color="blue" />
+                <Text style={styles.text}>
+                  {place?.location
+                    ? place?.location?.line1 +
+                      ', ' +
+                      place?.location?.city +
+                      ' ' +
+                      place?.location?.postalCode +
+                      ', ' +
+                      place?.location?.country
+                    : 'No address was filled.'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.infos}>
+                <Entypo name="clock" size={24} color="blue" />
+                <Text style={styles.text}>Open Hours</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.infos} onPress={openWebsite}>
+                <AntDesign name="earth" size={24} color="blue" />
+                <Text style={styles.text}>
+                  {place?.website ? place?.website : 'No website was filled.'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.infos} onPress={openPhone}>
+                <Entypo name="phone" size={24} color="blue" />
+                <Text style={styles.text}>
+                  {place?.phone ? place?.phone : 'No phone number was filled.'}
+                </Text>
+              </TouchableOpacity>
+              <Text>{place.id}</Text>
+            </View>
+            <View style={{ height: 100, width: '100%' }} />
+            <View style={{ height: 100, width: '100%' }} />
 
-            {/* <Text></Text>
-                <Text>site web</Text>
-                <Text>Telephone</Text>
-                <Text>Email</Text> */}
-          </View>
-          <View style={styles.divider} />
+            <View style={styles.divider} />
+            <View style={{ height: 100, width: '100%' }} />
+
+            {/* </View> */}
+          </ScrollView>
           <AddToListModal
             place={place}
             visible={modalVisible}

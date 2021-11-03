@@ -31,7 +31,6 @@ export const LikeProvider: React.FC = ({ children }) => {
     const tmpLikes: ILike = snapshot.docs.map(doc => {
       return { ...doc.data(), id: doc.id };
     });
-    console.log('tmpLikes = ', tmpLikes);
     setUserLikes(tmpLikes);
     return tmpLikes;
   };

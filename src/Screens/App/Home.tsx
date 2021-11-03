@@ -27,7 +27,7 @@ import { LikeContext } from '../../Contexts/LikeContext';
 
 type IHomeProps = NavigationProps<'Home'>;
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,8 +42,9 @@ const styles = StyleSheet.create({
   },
   overlayContainer: {
     flex: 1,
-    width: '100%',
     position: 'absolute',
+    // backgroundColor: 'red',
+    alignSelf: 'flex-end',
   },
   headActions: {
     // flexDirection: 'row',
@@ -59,52 +60,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: ACTION_BTN_BG,
-  },
-});
-
-const pstyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    width: '100%',
-  },
-  image: {
-    width: '100%',
-    height: 250,
-  },
-  content: {
-    padding: 10,
-    minHeight: 100,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  divider: {
-    height: 1,
-    width: '100%',
-    backgroundColor: '#F2F2F2',
-  },
-  contentAction: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  action: {
-    borderWidth: 2,
-    borderColor: 'blue',
-    height: 50,
-    width: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 25,
-  },
-  infos: {
-    flexDirection: 'row',
-    minHeight: 50,
-    alignItems: 'center',
   },
 });
 

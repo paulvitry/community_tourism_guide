@@ -8,7 +8,7 @@ import { PlaceContext } from '../../Contexts/PlaceContext';
 import { LikeContext } from '../../Contexts/LikeContext';
 // import firebase from '../../database/firebase';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 type IUserLikesProps = NavigationProps<'List'>;
 
@@ -118,7 +118,7 @@ export const UserLikes: React.FC<IUserLikesProps> = ({ navigation, route }) => {
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={['#748B6F', '#748B6F', 'white', 'white']}
+      colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
@@ -135,6 +135,8 @@ export const UserLikes: React.FC<IUserLikesProps> = ({ navigation, route }) => {
             {userLikes ? (
               userLikes?.map((like, index: number) => {
                 if (like.postType === 'place') {
+                  console.log('userPLaces should map : ', userLikes);
+
                   return (
                     <PlaceListItem
                       placeId={like.postId}
@@ -147,7 +149,10 @@ export const UserLikes: React.FC<IUserLikesProps> = ({ navigation, route }) => {
                 }
               })
             ) : (
-              <Text>{"You didn't like anything yet"}</Text>
+              <View>
+                {console.log('should display text')}
+                <Text>{"You didn't like anything yet"}</Text>
+              </View>
             )}
             {/* <View style={styles.bgShape} /> */}
 

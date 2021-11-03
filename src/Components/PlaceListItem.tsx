@@ -11,12 +11,14 @@ import {
   TouchableHighlight,
   Alert,
 } from 'react-native';
+import { style } from 'styled-system';
 import { ImageContext } from '../Contexts/ImageContext';
+import { ListContext } from '../Contexts/ListContext';
 import { PlaceContext } from '../Contexts/PlaceContext';
 import { IPlace } from '../Interfaces/IPlaceContext';
 import { NavigationParamList } from '../Navigation/Navigation';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 const styles = StyleSheet.create({
   container: {
@@ -68,6 +70,8 @@ interface IPlaceListItemProps {
   key: number;
   navigation: NativeStackNavigationProp<NavigationParamList>;
   canEdit?: boolean;
+  listId?: string;
+  setShouldReload?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
@@ -75,12 +79,14 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
   navigation,
   data = null,
   canEdit = false,
+  listId = undefined,
+  setShouldReload = undefined,
 }) => {
   const [image, setImage] = useState(null);
   const [place, setPlace] = useState<IPlace | null>(data);
   const { getImage } = useContext(ImageContext);
-  const { getPlaceById, deletePlace, getUserPlaces } = useContext(PlaceContext);
-  // const { addPlaceToList, lists, getLists } = useContext(ListContext);
+  const { getPlaceById, deletePlace } = useContext(PlaceContext);
+  const { deletePlaceFromList } = useContext(ListContext);
   // const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -89,6 +95,7 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
       (async () => {
         setPlace(await getPlaceById(placeId!));
       })();
+      console.log('-----------------------place>', place);
     }
 
     if (place?.picture && !image) {
@@ -102,49 +109,94 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
   const handleClick = () => {
     navigation.navigate('PlaceDetails', { data: place! });
   };
+  const renderEdit = () => {
+    return (
+      <View style={styles.actionView}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => navigation.navigate('CreatePlace', { data: place! })}
+        >
+          <AntDesign name="edit" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            Alert.alert('Are you sure you want to delete this place?', '', [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {
+                text: 'Delete',
+                onPress: async () => {
+                  console.log('over');
+                  await deletePlace(place?.id!);
+                },
+              },
+            ])
+          }
+        >
+          <AntDesign name="delete" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderDeleteFromList = () => {
+    return (
+      <View style={styles.actionView}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() =>
+            Alert.alert('Are you sure you want to delete from list?', '', [
+              {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {
+                text: 'Delete',
+                onPress: async () => {
+                  console.log('over');
+                  await deletePlaceFromList({
+                    placeId: place?.id!,
+                    listId: listId!,
+                  });
+                  setShouldReload!(true);
+                },
+              },
+            ])
+          }
+        >
+          <AntDesign name="delete" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <TouchableOpacity onPress={() => handleClick()} style={styles.container}>
       <Image style={styles.image} source={{ uri: image! }} />
-      <View style={styles.content}>
-        <View style={styles.texts}>
-          <Text style={styles.title}>{place?.title}</Text>
-          <Text style={styles.description}>{place?.description}</Text>
-        </View>
-        {canEdit && (
-          <View style={styles.actionView}>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() =>
-                navigation.navigate('CreatePlace', { data: place! })
-              }
-            >
-              <AntDesign name="edit" size={24} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() =>
-                Alert.alert('Are you sure you want to delete this place?', '', [
-                  {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'Delete',
-                    onPress: async () => {
-                      console.log('over');
-                      await deletePlace(place?.id!);
-                    },
-                  },
-                ])
-              }
-            >
-              <AntDesign name="delete" size={24} color="black" />
-            </TouchableOpacity>
+      {place?.title ? (
+        <View style={styles.content}>
+          <View style={styles.texts}>
+            <Text style={styles.title}>{place?.title}</Text>
+            <Text style={styles.description}>{place?.description}</Text>
           </View>
-        )}
-      </View>
+          {listId && renderDeleteFromList()}
+          {canEdit && renderEdit()}
+        </View>
+      ) : (
+        <View style={styles.content}>
+          <Text style={styles.texts}>
+            {
+              'We cannot find this place anymore...\nIt was certainly suppressed by author'
+            }
+          </Text>
+          {listId && renderDeleteFromList()}
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

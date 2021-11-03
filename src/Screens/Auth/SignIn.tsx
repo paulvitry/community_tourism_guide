@@ -15,6 +15,7 @@ import { NavigationProps } from '../../Navigation/Navigation';
 
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 import { IAuth } from '../../Interfaces/IAuthenticationContext';
+import { LinearGradient } from 'expo-linear-gradient';
 // import { getAuth, linkWithPopup, GoogleAuthProvider } from 'firebase/auth';
 // const provider = new GoogleAuthProvider();
 
@@ -23,7 +24,6 @@ type ISignInProps = NavigationProps<'SignIn'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     flex: 0.7,
     padding: '5%',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
   footer: {
     flex: 0.2,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     width: '90%',
     fontSize: 32,
     fontWeight: 'bold',
+    color: 'white',
   },
   textInput: {
     backgroundColor: '#D4D4D4',
@@ -96,6 +98,11 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
     await login(values);
   };
   return (
+    <LinearGradient
+      // Background Linear Gradient
+      colors={['#000000', '#000000', 'white', 'white']}
+      style={{ flex: 1 }}
+    >
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Sign In</Text>
@@ -140,5 +147,6 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
         </TouchableHighlight>
       </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 };

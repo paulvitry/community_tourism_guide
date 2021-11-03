@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -20,7 +22,7 @@ import { TextInput } from '../../Components/TextInput';
 import { IList } from '../../Interfaces/IListContext';
 // import firebase from '../../database/firebase';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 type IListProps = NavigationProps<'List'>;
 
@@ -107,6 +109,9 @@ const styles = StyleSheet.create({
 
   listDescription: {
     color: 'grey',
+  },
+  action: {
+    marginLeft: 15,
   },
 });
 
@@ -197,10 +202,13 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
       await getLists();
       console.log('hey');
     })();
+    console.log('-----------------list>', lists);
   }, []);
 
   const createListModal = () => {
     return (
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -253,13 +261,14 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+      </KeyboardAvoidingView>
     );
   };
 
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={['#748B6F', '#748B6F', 'white', 'white']}
+      colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
@@ -267,8 +276,20 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
           <View style={styles.headerRow}>
             <Text style={styles.headerTitle}>Lists</Text>
             <View style={styles.headerActions}>
-              <Button title="back" onPress={onClickHome} />
-              <Button title="add" onPress={onClickAdd} />
+              <AntDesign
+                style={styles.action}
+                name="plus"
+                size={24}
+                color="white"
+                onPress={() => onClickAdd()}
+              />
+              <AntDesign
+              style={styles.action}
+                name="arrowleft"
+                size={24}
+                color="white"
+                onPress={() => onClickHome()}
+              />
             </View>
           </View>
         </View>

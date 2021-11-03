@@ -1,35 +1,23 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   Button,
-  Modal,
-  TouchableHighlight,
-  TouchableOpacity,
-  KeyboardAvoidingView,
   ScrollView,
   Alert,
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
-import { ListContext } from '../../Contexts/ListContext';
-import { TextInput } from '../../Components/TextInput';
 import { IList } from '../../Interfaces/IListContext';
-import { IPlace } from '../../Interfaces/IPlaceContext';
 import { PlaceListItem } from '../../Components/PlaceListItem';
-// import firebase from '../../database/firebase';
+import { ListContext } from '../../Contexts/ListContext';
+import { AntDesign } from '@expo/vector-icons';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 type IListDetailsProps = NavigationProps<'List'>;
-
-interface IListDetailsRoute {
-  list: IList;
-}
 
 const styles = StyleSheet.create({
   container: {
@@ -115,33 +103,57 @@ const styles = StyleSheet.create({
   listDescription: {
     color: 'grey',
   },
+  action: {
+    marginLeft: 15,
+  },
 });
 
 export const ListDetails: React.FC<IListDetailsProps> = ({
   navigation,
   route,
 }) => {
-  //   const { lists, getLists, createList } = useContext(ListContext);
-  //   const [modalVisible, setModalVisible] = useState(false);
-  //   const [form, setForm] = useState({ title: null, description: null });
-  // const [lists, setLists] = useState();
-
   const [list, setList] = useState<IList | undefined>(undefined);
+  const { getListById, deleteList } = useContext(ListContext);
+  const [shouldReload, setShouldReload] = useState(true);
 
-  const onClicBack = () => {
+  const onClickBack = () => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    console.log('useEffect params -> ', route.params);
-    setList(route.params?.list);
+  const handleDelete = async () => {
+    Alert.alert('Are you sure you want to delete this place?', '', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: async () => {
+          console.log('over');
+          await deleteList(list?.id);
+          onClickBack();
+        },
+      },
+    ]);
+  };
 
-  }, []);
+  useEffect(() => {
+    if (shouldReload) {
+      (async () => {
+        console.log('useEffect params -> ');
+        const tmpValue = await getListById(route.params?.list?.id);
+        setList(undefined);
+        setList(tmpValue);
+        setShouldReload(false);
+        console.log('value resssssssset --------------------------->');
+      })();
+    }
+  }, [shouldReload]);
 
   return (
     <LinearGradient
-      // Background Linear Gradient
-      colors={['#748B6F', '#748B6F', 'white', 'white']}
+      colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>
@@ -149,7 +161,20 @@ export const ListDetails: React.FC<IListDetailsProps> = ({
           <View style={styles.headerRow}>
             <Text style={styles.headerTitle}>{list?.title}</Text>
             <View style={styles.headerActions}>
-              <Button title="back" onPress={onClicBack} />
+              <AntDesign
+                style={styles.action}
+                name="delete"
+                size={24}
+                color="white"
+                onPress={() => handleDelete()}
+              />
+              <AntDesign
+              style={styles.action}
+                name="arrowleft"
+                size={24}
+                color="white"
+                onPress={() => onClickBack()}
+              />
             </View>
           </View>
         </View>
@@ -157,14 +182,17 @@ export const ListDetails: React.FC<IListDetailsProps> = ({
           <View style={styles.content}>
             {list?.places.map((place: string, index: number) => {
               return (
-                <PlaceListItem placeId={place} key={index} navigation={navigation}/>
+                <PlaceListItem
+                  placeId={place}
+                  key={index}
+                  navigation={navigation}
+                  listId={list.id}
+                  setShouldReload={setShouldReload}
+                />
               );
             })}
-            {/* <View style={styles.bgShape} /> */}
-
             <View style={{ height: 40 }} />
           </View>
-          {/* {createListModal()} */}
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>

@@ -18,7 +18,7 @@ import { ImageContext } from '../../Contexts/ImageContext';
 import { useStyledSystemPropsResolver } from 'native-base';
 // import firebase from '../../database/firebase';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 type IProfileProps = NavigationProps<'Profile'>;
 
@@ -218,7 +218,7 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={['#748B6F', '#748B6F', 'white', 'white']}
+      colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.container}>

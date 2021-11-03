@@ -21,6 +21,8 @@ import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
 import { ICreatePlace, IEditPlace } from '../../Interfaces/IPlaceContext';
 // import { ImageBrowser } from 'expo-image-picker-multiple';
 import { TextInput } from '../../Components/TextInput';
+import { LinearGradient } from 'expo-linear-gradient';
+import { AntDesign } from '@expo/vector-icons';
 
 type ICreatePlaceProps = NavigationProps<'CreatePlace'>;
 // interface ICreatePlaceProps {
@@ -33,7 +35,6 @@ type ICreatePlaceProps = NavigationProps<'CreatePlace'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: '5%',
+    backgroundColor: 'white',
   },
   footer: {
     height: 200,
@@ -65,6 +67,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     fontWeight: 'bold',
+    color: 'white',
   },
   textInput: {
     backgroundColor: '#D4D4D4',
@@ -163,8 +166,10 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   };
   const onSelectMedias = async () => {
     const res = await uploadPicture();
-    setSelectedPicture(res);
-    setForm({ ...form, picture: res.uri });
+    if (res) {
+      setSelectedPicture(res);
+      setForm({ ...form, picture: res.uri });
+    }
   };
 
   useEffect(() => {
@@ -181,6 +186,7 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
         country: route.params?.data?.location?.country,
       });
       (async () => {
+        setSelectedPicture(undefined);
         setExistingImage(
           await getImage({ path: 'images', url: route.params.data?.picture! }),
         );
@@ -222,148 +228,175 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerRow}>
-          <Text style={styles.headerTitle}>
-            {form?.id ? 'Edit Place' : 'Create Place'}
-          </Text>
-          <Button title="back" onPress={onBackClick} />
-        </View>
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.content}>
-            <TextInput
-              label="Title"
-              onChangeText={value => setForm({ ...form, title: value })}
-              keyboardType="default"
-              isRequired
-              defaultValue={form.title}
-              isInvalid={!form.title}
-              errorMessage={'Must be filled'}
-            />
-
-            <TextInput
-              label="Description"
-              onChangeText={value => setForm({ ...form, description: value })}
-              keyboardType="default"
-              defaultValue={form.description}
-            />
-
-            <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>
-              Select photo
-              <Text style={{ color: 'red', fontWeight: 'normal' }}>*</Text>
+    <LinearGradient
+      // Background Linear Gradient
+      colors={['#000000', '#000000', 'white', 'white']}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerTitle}>
+              {form?.id ? 'Edit Place' : 'Create Place'}
             </Text>
-            <TouchableHighlight
-              onPress={onSelectMedias}
-              style={
-                form.picture
-                  ? styles.touchableImage
-                  : styles.touchableImageEmpty
-              }
-            >
-              <ImageBackground
-                style={styles.imageBackground}
-                source={
-                  existingImage ? { uri: existingImage! } : selectedPicture!
+            <AntDesign
+              style={{ marginLeft: 15 }}
+              name="arrowleft"
+              size={24}
+              color="white"
+              onPress={() => onBackClick()}
+            />
+          </View>
+        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <ScrollView style={styles.scrollView}>
+            <View style={styles.content}>
+              <TextInput
+                label="Title"
+                onChangeText={value => setForm({ ...form, title: value })}
+                keyboardType="default"
+                isRequired
+                defaultValue={form.title}
+                isInvalid={!form.title}
+                errorMessage={'Must be filled'}
+              />
+
+              <TextInput
+                label="Description"
+                onChangeText={value => setForm({ ...form, description: value })}
+                keyboardType="default"
+                defaultValue={form.description}
+              />
+
+              <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>
+                Select photo
+                <Text style={{ color: 'red', fontWeight: 'normal' }}>*</Text>
+              </Text>
+              <TouchableHighlight
+                onPress={onSelectMedias}
+                style={
+                  form.picture
+                    ? styles.touchableImage
+                    : styles.touchableImageEmpty
                 }
-              ></ImageBackground>
-            </TouchableHighlight>
-            {!form.picture && (
-              <Text style={styles.textError}>{'Must be filled'}</Text>
-            )}
+              >
+                <ImageBackground
+                  style={styles.imageBackground}
+                  source={
+                    !selectedPicture
+                      ? { uri: existingImage! }
+                      : selectedPicture!
+                  }
+                ></ImageBackground>
+              </TouchableHighlight>
+              {!form.picture && (
+                <Text style={styles.textError}>{'Must be filled'}</Text>
+              )}
 
-            <TextInput
-              label="Latitude"
-              onChangeText={value =>
-                setForm({ ...form, latitude: parseFloat(value) })
-              }
-              keyboardType="default"
-              isRequired
-              defaultValue={form.latitude?.toString()}
-              isInvalid={!form.latitude}
-              errorMessage={'Must be filled'}
-            />
-            <TextInput
-              label="Longitude"
-              onChangeText={value =>
-                setForm({ ...form, longitude: parseFloat(value) })
-              }
-              keyboardType="default"
-              isRequired
-              defaultValue={form.longitude?.toString()}
-              isInvalid={!form.longitude}
-              errorMessage={'Must be filled'}
-            />
-            <TextInput
-              label="Line1"
-              onChangeText={value => setForm({ ...form, line1: value })}
-              keyboardType="default"
-              defaultValue={form.line1}
-            />
-            <TextInput
-              label="City"
-              onChangeText={value => setForm({ ...form, city: value })}
-              keyboardType="default"
-              defaultValue={form.city}
-            />
-            <TextInput
-              label="Postal Code"
-              onChangeText={value => setForm({ ...form, postalCode: value })}
-              keyboardType="default"
-              defaultValue={form.postalCode}
-            />
-            <TextInput
-              label="Country"
-              onChangeText={value => setForm({ ...form, country: value })}
-              keyboardType="default"
-              defaultValue={form.country}
-            />
-            <TextInput
-              label="website"
-              onChangeText={value => setForm({ ...form, website: value })}
-              keyboardType="default"
-              defaultValue={form.website}
-            />
-            <TextInput
-              label="phone number"
-              onChangeText={value => setForm({ ...form, phone: value })}
-              keyboardType="default"
-              defaultValue={form.phone}
-            />
+              <TextInput
+                label="Latitude"
+                onChangeText={value =>
+                  setForm({ ...form, latitude: parseFloat(value) })
+                }
+                keyboardType="default"
+                isRequired
+                defaultValue={form.latitude?.toString()}
+                isInvalid={!form.latitude}
+                errorMessage={'Must be filled'}
+              />
+              <TextInput
+                label="Longitude"
+                onChangeText={value =>
+                  setForm({ ...form, longitude: parseFloat(value) })
+                }
+                keyboardType="default"
+                isRequired
+                defaultValue={form.longitude?.toString()}
+                isInvalid={!form.longitude}
+                errorMessage={'Must be filled'}
+              />
+              <TextInput
+                label="Line1"
+                onChangeText={value => setForm({ ...form, line1: value })}
+                keyboardType="default"
+                defaultValue={form.line1}
+              />
+              <TextInput
+                label="City"
+                onChangeText={value => setForm({ ...form, city: value })}
+                keyboardType="default"
+                defaultValue={form.city}
+              />
+              <TextInput
+                label="Postal Code"
+                onChangeText={value => setForm({ ...form, postalCode: value })}
+                keyboardType="default"
+                defaultValue={form.postalCode}
+              />
+              <TextInput
+                label="Country"
+                onChangeText={value => setForm({ ...form, country: value })}
+                keyboardType="default"
+                defaultValue={form.country}
+              />
+              <TextInput
+                label="website"
+                onChangeText={value => setForm({ ...form, website: value })}
+                keyboardType="default"
+                defaultValue={form.website}
+              />
+              <TextInput
+                label="phone number"
+                onChangeText={value => setForm({ ...form, phone: value })}
+                keyboardType="default"
+                defaultValue={form.phone}
+              />
 
-            {/* <ImageBrowser
+              <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>
+                Select categories:
+                {/* <Text style={{ color: 'red', fontWeight: 'normal' }}>*</Text> */}
+              </Text>
+              <Button
+                title="Select categories"
+                onPress={() => {
+                  // navigation.navigate('SelectCategories', { setForm: setForm });
+                }}
+              />
+
+              {/* <ImageBrowser
           max={4}
           // onChange={(num, onSubmit) => {}}
           // callback={callback => {}}
         /> */}
-          </View>
+            </View>
 
-          <View style={styles.footer}>
-            <View style={styles.topFooter}></View>
-            <TouchableHighlight
-              style={
-                isDisabled() ? styles.actionButtonDisabled : styles.actionButton
-              }
-              onPress={onClick}
-              disabled={isDisabled()}
-            >
-              {loading ? (
-                <View style={styles.loading}>
-                  <ActivityIndicator size="small" color="black" />
-                  <Text style={styles.loadingText}>{step}</Text>
-                </View>
-              ) : (
-                <Text style={styles.actionButtonText}>Publish</Text>
-              )}
-            </TouchableHighlight>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <View style={styles.footer}>
+              <View style={styles.topFooter}></View>
+              <TouchableHighlight
+                style={
+                  isDisabled()
+                    ? styles.actionButtonDisabled
+                    : styles.actionButton
+                }
+                onPress={onClick}
+                disabled={isDisabled()}
+              >
+                {loading ? (
+                  <View style={styles.loading}>
+                    <ActivityIndicator size="small" color="black" />
+                    <Text style={styles.loadingText}>{step}</Text>
+                  </View>
+                ) : (
+                  <Text style={styles.actionButtonText}>Publish</Text>
+                )}
+              </TouchableHighlight>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };

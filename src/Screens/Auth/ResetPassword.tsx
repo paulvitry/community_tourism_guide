@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
 import {
   StyleSheet,
@@ -20,7 +21,6 @@ type IResetPasswordProps = NavigationProps<'ResetPassword'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     flex: 0.7,
     padding: '5%',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
   footer: {
     flex: 0.2,
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
     width: '90%',
     fontSize: 32,
     fontWeight: 'bold',
+    color: 'white',
   },
   textInput: {
     backgroundColor: '#D4D4D4',
@@ -90,6 +92,11 @@ export const ResetPassword: React.FC<IResetPasswordProps> = ({
   };
 
   return (
+    <LinearGradient
+      // Background Linear Gradient
+      colors={['#000000', '#000000', 'white', 'white']}
+      style={{ flex: 1 }}
+    >
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Reset password</Text>
@@ -117,5 +124,6 @@ export const ResetPassword: React.FC<IResetPasswordProps> = ({
         </TouchableHighlight>
       </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 };

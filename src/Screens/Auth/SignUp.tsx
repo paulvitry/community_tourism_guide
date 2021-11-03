@@ -15,13 +15,13 @@ import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
 import { IAuth } from '../../Interfaces/IAuthenticationContext';
 
 import { NavigationProps } from '../../Navigation/Navigation';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type ISignUpProps = NavigationProps<'SignUp'>;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   header: {
     width: '100%',
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     flex: 0.7,
     padding: '5%',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
   footer: {
     flex: 0.2,
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     width: '90%',
     fontSize: 32,
     fontWeight: 'bold',
+    color: 'white',
   },
   textInput: {
     backgroundColor: '#D4D4D4',
@@ -92,6 +94,11 @@ export const SignUp: React.FC<ISignUpProps> = ({ navigation }) => {
   };
 
   return (
+    <LinearGradient
+      // Background Linear Gradient
+      colors={['#000000', '#000000', 'white', 'white']}
+      style={{ flex: 1 }}
+    >
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Sign Up</Text>
@@ -131,5 +138,6 @@ export const SignUp: React.FC<ISignUpProps> = ({ navigation }) => {
         </TouchableHighlight>
       </View>
     </SafeAreaView>
+    </LinearGradient>
   );
 };

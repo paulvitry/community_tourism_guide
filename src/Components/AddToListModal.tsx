@@ -19,7 +19,7 @@ import { ListContext } from '../Contexts/ListContext';
 import { IList } from '../Interfaces/IListContext';
 import { IPlace } from '../Interfaces/IPlaceContext';
 
-const ACTION_BTN_BG = '#748B6F';
+const ACTION_BTN_BG = '#000000';
 
 interface IAddToListModalProps {
   place: IPlace | undefined;

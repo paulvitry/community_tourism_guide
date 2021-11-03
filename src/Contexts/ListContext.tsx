@@ -7,6 +7,9 @@ import {
   IListContext,
   TAddPlaceToListFC,
   TCreateListFC,
+  TDeleteFromListFC,
+  TDeleteListFC,
+  TGetListByIdFC,
   TGetListsFC,
 } from '../Interfaces/IListContext';
 
@@ -38,6 +41,21 @@ export const ListProvider: React.FC = ({ children }) => {
     setLists(tmpLists);
     console.log('lists: ', tmpLists);
     return tmpLists;
+  };
+
+  const getListById: TGetListByIdFC = async payload => {
+    console.log('getLists');
+
+    const snapshot = await firebase
+      .firestore()
+      .collection('Lists')
+      .doc(payload)
+      .get();
+
+    const tmpList = { id: snapshot.id, ...snapshot.data() };
+
+    console.log('lists: ', tmpList);
+    return tmpList;
   };
 
   const createList: TCreateListFC = async (payload: ICreateList) => {
@@ -96,7 +114,7 @@ export const ListProvider: React.FC = ({ children }) => {
     await list.set({ ...concernedList }).catch(e => {
       console.log(e);
       Alerts.warning({
-        title: 'Oops.. The place you want to addd is already in this list',
+        title: 'Oops.. The place you want to add is already in this list',
         message: '',
         duration: 4000,
       });
@@ -108,6 +126,59 @@ export const ListProvider: React.FC = ({ children }) => {
     });
   };
 
+  const deletePlaceFromList: TDeleteFromListFC = async payload => {
+    await getLists();
+    const concernedList = lists?.find(list => list.id === payload.listId);
+    console.log('---------------------ConcernedList : ', concernedList);
+    let newPlaces: string[] | undefined = [];
+    if (concernedList!.places.length > 1) {
+      newPlaces = concernedList?.places!.filter(place => {
+        if (place !== payload.placeId) return place;
+      });
+    }
+    console.log('---------------------New Places: ', newPlaces);
+    // concernedList?.places.push(payload.placeId);
+    const list = firebase.firestore().collection('Lists').doc(payload.listId);
+
+    await list.set({ ...concernedList, places: newPlaces }).catch(e => {
+      console.log(e);
+      Alerts.warning({
+        title:
+          'Oops.. An error occured during the deletion... Please try again',
+        message: '',
+        duration: 4000,
+      });
+    });
+    Alerts.success({
+      title: 'The place was successfuly deleted to th list',
+      message: '',
+      duration: 4000,
+    });
+    await getLists();
+  };
+
+  const deleteList: TDeleteListFC = async payload => {
+    await firebase
+      .firestore()
+      .collection('Lists')
+      .doc(payload)
+      .delete()
+      .catch(e => {
+        console.log(e);
+        Alerts.warning({
+          title: 'Oops... An arror occured during the deletion of the list.',
+          message: '',
+          duration: 4000,
+        });
+      });
+    Alerts.success({
+      title: 'List deleted successfuly.',
+      message: '',
+      duration: 4000,
+    });
+    await getLists();
+  };
+
   return (
     <ListContext.Provider
       value={{
@@ -115,7 +186,10 @@ export const ListProvider: React.FC = ({ children }) => {
 
         createList,
         getLists,
+        getListById,
         addPlaceToList,
+        deletePlaceFromList,
+        deleteList,
       }}
     >
       {children}
