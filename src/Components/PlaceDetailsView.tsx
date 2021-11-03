@@ -74,6 +74,22 @@ const styles = StyleSheet.create({
     height: '100%',
     // backgroundColor: 'red',
   },
+  badges: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%',
+    alignItems: 'flex-start',
+    marginTop: 10,
+  },
+  badge: {
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'grey',
+    padding: 5,
+    paddingHorizontal: 10,
+    margin: 1,
+  },
 });
 
 export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
@@ -89,11 +105,7 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
   // const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    console.log('-------------->use effect');
-    console.log('liked == ', liked);
     if (place?.id) {
-      console.log('liked === undefined');
-      console.log(place.id);
       (async () => {
         setLiked(await isLiked(place?.id));
       })();
@@ -125,14 +137,12 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
           message: '',
           duration: 4000,
         });
-        console.log("Don't know how to open URI: " + url);
       }
     });
   };
 
   const openPhone = () => {
     if (!place?.phone) {
-      console.log('no phone number');
       Alerts.warning({
         title: 'Oops... It looks like there is no phone number.',
         message: '',
@@ -149,7 +159,6 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
           message: '',
           duration: 4000,
         });
-        console.log("Don't know how to open URI: " + `tel:${place?.phone}`);
       }
     });
   };
@@ -178,7 +187,6 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
           message: '',
           duration: 4000,
         });
-        console.log("Don't know how to open URI: " + `${url}`);
       }
     });
   };
@@ -195,20 +203,15 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
   };
 
   const handleLike = async () => {
-    console.log('handle like');
     await like({ postId: place?.id!, postType: 'place' });
-    console.log('after like');
     setLiked(undefined);
     setLiked(await isLiked(place?.id!));
-    console.log('liked reset');
   };
 
   const handleUnlike = async () => {
-    console.log('unlike');
     await unlike(place?.id!);
     setLiked(undefined);
     setLiked(await isLiked(place?.id!));
-    console.log('end unlike');
   };
 
   return (
@@ -217,7 +220,6 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
         <View>
           <Image style={styles.image} source={{ uri: image! }} />
           <ScrollView style={styles.scrollView}>
-            {/* <View style={{ minHeight: '100%' }}> */}
             <View style={styles.content}>
               <Text style={styles.title}>{place.title}</Text>
               <Text>{place.description}</Text>
@@ -247,12 +249,25 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
                 style={styles.action}
                 onPress={() => {
                   setModalVisible(true);
-                  // setAllowDragging(false);
                 }}
               >
                 <Entypo name="add-to-list" size={24} color="blue" />
               </TouchableOpacity>
             </View>
+            <View style={styles.divider} />
+            {place?.categories && (
+              <View style={styles.content}>
+                <View style={styles.badges}>
+                  {place?.categories!.map((category, index) => {
+                    return (
+                      <View key={index} style={styles.badge}>
+                        <Text style={{ color: 'white' }}>{category}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
             <View style={styles.divider} />
             <View style={styles.content}>
               <TouchableOpacity style={styles.infos} onPress={openGps}>
@@ -292,8 +307,6 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
 
             <View style={styles.divider} />
             <View style={{ height: 100, width: '100%' }} />
-
-            {/* </View> */}
           </ScrollView>
           <AddToListModal
             place={place}
@@ -302,8 +315,6 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
           />
         </View>
       )}
-
-      {/* {selectListModal()} */}
     </View>
   );
 };

@@ -7,15 +7,17 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NavigationProps } from '../../Navigation/Navigation';
+import { NavigationParamList, NavigationProps } from '../../Navigation/Navigation';
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 import { ImageContext } from '../../Contexts/ImageContext';
 import { useStyledSystemPropsResolver } from 'native-base';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#000000';
@@ -145,7 +147,19 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
 
   const handleLogout = async () => {
     console.log('logout');
-    await logout();
+    Alert.alert('Are you sure you want to logout?', '', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Logout',
+        onPress: async () => {
+          await logout();
+        },
+      },
+    ]);
   };
 
   // const onSelectMedias = async () => {
@@ -178,7 +192,19 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
   };
 
   const handleResetPwd = async () => {
-    await resetpassword({ email: user!.email });
+    Alert.alert('Are you sure you want to reset your password?', 'You will receive a link by email to set a new password.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'Reset',
+        onPress: async () => {
+          await resetpassword({ email: user!.email });
+        },
+      },
+    ]);
   };
 
   const renderActions = () => {
@@ -225,7 +251,13 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
         <View style={styles.header}>
           <View style={styles.headerRow}>
             <Text style={styles.headerTitle}>Profile</Text>
-            <Button title="back" onPress={onClickHome} />
+            <AntDesign
+              style={{ marginLeft: 15 }}
+              name="arrowleft"
+              size={24}
+              color="white"
+              onPress={() => onClickHome()}
+            />
           </View>
         </View>
         <ScrollView style={styles.scrollView}>

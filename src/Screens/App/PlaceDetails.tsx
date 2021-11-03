@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Button,
-} from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { IPlace } from '../../Interfaces/IPlaceContext';
@@ -14,6 +10,12 @@ type IPlaceDetailsProps = NavigationProps<'PlaceDetails'>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  actions: {
+    width: '100%',
+    position: 'absolute',
+    alignItems: 'flex-end',
+    padding: 10,
   },
 });
 
@@ -36,12 +38,11 @@ export const PlaceDetails: React.FC<IPlaceDetailsProps> = ({
 
   return (
     <View style={styles.container}>
-      <PlaceDetailsView place={place} />
-      <SafeAreaView style={{  width: '100%', position: 'absolute', alignItems: 'flex-end', padding: 10 }}>
-      <Button
-        title="back"
-        onPress={onClickBack}
-      />
+      <PlaceDetailsView place={place!} />
+      <SafeAreaView
+        style={styles.actions}
+      >
+        <Button title="back" onPress={onClickBack} />
       </SafeAreaView>
     </View>
   );

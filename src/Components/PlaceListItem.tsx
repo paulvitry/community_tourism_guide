@@ -5,20 +5,15 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput as TI,
   Image,
   TouchableOpacity,
-  TouchableHighlight,
   Alert,
 } from 'react-native';
-import { style } from 'styled-system';
 import { ImageContext } from '../Contexts/ImageContext';
 import { ListContext } from '../Contexts/ListContext';
 import { PlaceContext } from '../Contexts/PlaceContext';
 import { IPlace } from '../Interfaces/IPlaceContext';
 import { NavigationParamList } from '../Navigation/Navigation';
-
-const ACTION_BTN_BG = '#000000';
 
 const styles = StyleSheet.create({
   container: {
@@ -52,15 +47,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F2F2',
   },
   actionView: {
-    // flex: 1,
-    width: '20%',
+    width: '15%',
     alignItems: 'flex-end',
   },
   texts: {
-    width: '80%',
+    width: '85%',
   },
   editButton: {
     padding: 5,
+  },
+  badges: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%',
+    alignItems: 'flex-start',
+    marginTop: 10,
+
+  },
+  badge: {
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'grey',
+    padding: 5,
+    paddingHorizontal: 10,
+    margin: 1,
   },
 });
 
@@ -90,16 +101,13 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
   // const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    console.log('item place: ', place);
     if (!place) {
       (async () => {
         setPlace(await getPlaceById(placeId!));
       })();
-      console.log('-----------------------place>', place);
     }
 
     if (place?.picture && !image) {
-      console.log('should set image');
       (async () => {
         setImage(await getImage({ path: 'images', url: place!.picture }));
       })();
@@ -158,7 +166,6 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
               {
                 text: 'Delete',
                 onPress: async () => {
-                  console.log('over');
                   await deletePlaceFromList({
                     placeId: place?.id!,
                     listId: listId!,
@@ -183,7 +190,19 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
           <View style={styles.texts}>
             <Text style={styles.title}>{place?.title}</Text>
             <Text style={styles.description}>{place?.description}</Text>
+            {place?.categories && (
+              <View style={styles.badges}>
+                {place?.categories!.map((category, index) => {
+                  return (
+                    <View key={index} style={styles.badge}>
+                      <Text style={{ color: 'white' }}>{category}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
           </View>
+
           {listId && renderDeleteFromList()}
           {canEdit && renderEdit()}
         </View>

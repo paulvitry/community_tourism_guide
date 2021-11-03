@@ -1,6 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { RouteProp } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -17,6 +20,9 @@ import { ListDetails } from '../Screens/App/ListDetails';
 import { PlaceDetails } from '../Screens/App/PlaceDetails';
 import { UserPlaces } from '../Screens/App/UserPlaces';
 import { UserLikes } from '../Screens/App/UserLikes';
+import { SelectCategories } from '../Screens/App/SelectCategories';
+import { ICreatePlace, IEditPlace, IPlace } from '../Interfaces/IPlaceContext';
+import { IList } from '../Interfaces/IListContext';
 
 interface INavigationProps {}
 
@@ -24,14 +30,18 @@ export type NavigationParamList = {
   SignIn: React.FC;
   SignUp: React.FC;
   ResetPassword: React.FC;
-  Home: React.FC;
+  Home: undefined;
   Profile: React.FC;
-  CreatePlace: React.FC;
+  CreatePlace: { data: IPlace };
   List: React.FC;
-  ListDetails: React.FC;
-  PlaceDetails: React.FC;
+  ListDetails: { list: IList };
+  PlaceDetails: { data: IPlace };
   UserPlaces: React.FC;
   UserLikes: React.FC;
+  SelectCategories: {
+    form: ICreatePlace | IEditPlace;
+    setForm: React.Dispatch<React.SetStateAction<ICreatePlace | IEditPlace>>;
+  };
 };
 
 // type TabParamList = {
@@ -84,6 +94,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           <Stack.Screen name="PlaceDetails" component={PlaceDetails} />
           <Stack.Screen name="UserPlaces" component={UserPlaces} />
           <Stack.Screen name="UserLikes" component={UserLikes} />
+          <Stack.Screen name="SelectCategories" component={SelectCategories} />
         </Stack.Navigator>
       ) : (
         // <Stack.Navigator

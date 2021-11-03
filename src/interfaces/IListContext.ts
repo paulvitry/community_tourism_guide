@@ -5,12 +5,12 @@ export interface IListContext {
   createList: TCreateListFC;
   addPlaceToList: TAddPlaceToListFC;
   deletePlaceFromList: TDeleteFromListFC;
-  deleteList: TDDeleteListFC;
+  deleteList: TDeleteListFC;
 }
 
 export interface ICreateList {
-  title: string;
-  description?: string;
+  title: string | undefined;
+  description?: string | undefined;
 }
 
 export interface IList {

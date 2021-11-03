@@ -24,9 +24,11 @@ export interface IPlace {
   };
   website: string | undefined;
   phone: string | undefined;
+  categories: string[];
 }
 
 export interface ICreatePlace {
+  id: string | undefined;
   title: string | undefined;
   description: string | undefined;
   picture: string | undefined;
@@ -39,10 +41,11 @@ export interface ICreatePlace {
   country: string | undefined;
   website: string | undefined;
   phone: string | undefined;
+  categories: string[];
 }
 
 export interface IEditPlace {
-  id: string;
+  id: string | undefined;
   title: string | undefined;
   description: string | undefined;
   picture: string | undefined;
@@ -57,6 +60,7 @@ export interface IEditPlace {
   phone: string | undefined;
   updated_at: string | undefined;
   created_at: Date;
+  categories: string[];
 }
 
 export type TGetPlacesFC = () => Promise<any>;

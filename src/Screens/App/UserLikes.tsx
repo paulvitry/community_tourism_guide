@@ -6,6 +6,7 @@ import { NavigationProps } from '../../Navigation/Navigation';
 import { PlaceListItem } from '../../Components/PlaceListItem';
 import { PlaceContext } from '../../Contexts/PlaceContext';
 import { LikeContext } from '../../Contexts/LikeContext';
+import { AntDesign } from '@expo/vector-icons';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#000000';
@@ -104,7 +105,7 @@ export const UserLikes: React.FC<IUserLikesProps> = ({ navigation, route }) => {
   //   const [form, setForm] = useState({ title: null, description: null });
   // const [lists, setLists] = useState();
 
-  const onClicBack = () => {
+  const onClickBack = () => {
     navigation.goBack();
   };
 
@@ -126,7 +127,13 @@ export const UserLikes: React.FC<IUserLikesProps> = ({ navigation, route }) => {
           <View style={styles.headerRow}>
             <Text style={styles.headerTitle}>{'Likes'}</Text>
             <View style={styles.headerActions}>
-              <Button title="back" onPress={onClicBack} />
+            <AntDesign
+              style={{ marginLeft: 15 }}
+              name="arrowleft"
+              size={24}
+              color="white"
+              onPress={() => onClickBack()}
+            />
             </View>
           </View>
         </View>

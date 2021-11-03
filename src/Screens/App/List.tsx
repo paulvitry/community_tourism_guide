@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   Modal,
   TouchableHighlight,
   TouchableOpacity,
@@ -20,7 +19,6 @@ import { NavigationProps } from '../../Navigation/Navigation';
 import { ListContext } from '../../Contexts/ListContext';
 import { TextInput } from '../../Components/TextInput';
 import { IList } from '../../Interfaces/IListContext';
-// import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#000000';
 
@@ -179,20 +177,20 @@ const mstyles = StyleSheet.create({
 export const List: React.FC<IListProps> = ({ navigation }) => {
   const { lists, getLists, createList } = useContext(ListContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [form, setForm] = useState({ title: null, description: null });
-  // const [lists, setLists] = useState();
+  const [form, setForm] = useState({
+    title: undefined,
+    description: undefined,
+  });
 
   const onClickHome = () => {
     navigation.navigate('Home');
   };
 
   const onClickAdd = () => {
-    console.log('add');
     setModalVisible(true);
   };
 
   const handleListClick = (list: IList) => {
-    console.log('handle click list details');
     console.log(list);
     navigation.navigate('ListDetails', { list: list });
   };
@@ -200,67 +198,68 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       await getLists();
-      console.log('hey');
     })();
-    console.log('-----------------list>', lists);
   }, []);
 
   const createListModal = () => {
     return (
       <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={mstyles.centeredView}>
-          <View style={mstyles.modalView}>
-            <View style={mstyles.header}>
-              <Text style={mstyles.headerTitle}>New list</Text>
-              <TouchableHighlight
-                style={mstyles.closeButton}
-                onPress={() => {
-                  setModalVisible(false);
-                }}
-              >
-                <Entypo name="cross" size={24} color="white" />
-              </TouchableHighlight>
-            </View>
-            <View style={mstyles.space} />
-            <ScrollView style={{ width: '100%' }}>
-              <View style={{ width: '100%' }}>
-                <TextInput
-                  label={'list name'}
-                  onChangeText={text => setForm({ ...form, title: text })}
-                />
-                <TextInput
-                  label={'description'}
-                  onChangeText={text => setForm({ ...form, description: text })}
-                />
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}
+        >
+          <View style={mstyles.centeredView}>
+            <View style={mstyles.modalView}>
+              <View style={mstyles.header}>
+                <Text style={mstyles.headerTitle}>New list</Text>
+                <TouchableHighlight
+                  style={mstyles.closeButton}
+                  onPress={() => {
+                    setModalVisible(false);
+                  }}
+                >
+                  <Entypo name="cross" size={24} color="white" />
+                </TouchableHighlight>
               </View>
               <View style={mstyles.space} />
-              <TouchableHighlight
-                style={{
-                  ...mstyles.openButton,
-                  backgroundColor: ACTION_BTN_BG,
-                }}
-                disabled={!form.title}
-                onPress={async () => {
-                  setModalVisible(!modalVisible);
-                  console.log('creation');
-                  await createList(form);
-                }}
-              >
-                <Text style={mstyles.textStyle}>Create</Text>
-              </TouchableHighlight>
-            </ScrollView>
+              <ScrollView style={{ width: '100%' }}>
+                <View style={{ width: '100%' }}>
+                  <TextInput
+                    label={'list name'}
+                    onChangeText={text => setForm({ ...form, title: text })}
+                  />
+                  <TextInput
+                    label={'description'}
+                    onChangeText={text =>
+                      setForm({ ...form, description: text })
+                    }
+                  />
+                </View>
+                <View style={mstyles.space} />
+                <TouchableHighlight
+                  style={{
+                    ...mstyles.openButton,
+                    backgroundColor: ACTION_BTN_BG,
+                  }}
+                  disabled={!form.title}
+                  onPress={async () => {
+                    setModalVisible(!modalVisible);
+                    console.log('creation');
+                    await createList(form!);
+                  }}
+                >
+                  <Text style={mstyles.textStyle}>Create</Text>
+                </TouchableHighlight>
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </KeyboardAvoidingView>
     );
   };
@@ -284,7 +283,7 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
                 onPress={() => onClickAdd()}
               />
               <AntDesign
-              style={styles.action}
+                style={styles.action}
                 name="arrowleft"
                 size={24}
                 color="white"
@@ -315,7 +314,7 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
                 );
               })
             ) : (
-              <Text >{'You don\'t have any list yet...'}</Text>
+              <Text>{"You don't have any list yet..."}</Text>
             )}
             {/* <View style={styles.bgShape} /> */}
 

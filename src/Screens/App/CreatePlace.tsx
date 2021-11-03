@@ -131,6 +131,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 10,
   },
+  badges: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '100%',
+    alignItems: 'flex-start',
+  },
+  badge: {
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'grey',
+    padding: 5,
+    paddingHorizontal: 10,
+    margin: 1,
+  },
 });
 
 export const CreatePlace: React.FC<ICreatePlaceProps> = ({
@@ -151,6 +166,7 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
     country: undefined,
     website: undefined,
     phone: undefined,
+    categories: [],
   });
   // const [title, setTitle] = useState<string>();
   // const [description, setDescription] = useState<string>();
@@ -359,10 +375,22 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
                 Select categories:
                 {/* <Text style={{ color: 'red', fontWeight: 'normal' }}>*</Text> */}
               </Text>
+              <View style={styles.badges}>
+                {form.categories?.map((category, index) => {
+                  return (
+                    <View key={index} style={styles.badge}>
+                      <Text style={{ color: 'white' }}>{category}</Text>
+                    </View>
+                  );
+                })}
+              </View>
               <Button
                 title="Select categories"
                 onPress={() => {
-                  // navigation.navigate('SelectCategories', { setForm: setForm });
+                  navigation.navigate('SelectCategories', {
+                    form: form,
+                    setForm: setForm,
+                  });
                 }}
               />
 

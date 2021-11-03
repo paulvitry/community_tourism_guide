@@ -14,6 +14,7 @@ import {
 import firebase from '../Database/firebase';
 import { AuthenticationContext } from './AuthenticationContext';
 import { AlertContext } from './AlertContext';
+import { SelectCategories } from '../Screens/App/SelectCategories';
 
 export const PlaceContext = createContext<IPlaceContext>(defaultPlaceValue);
 
@@ -91,6 +92,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
         },
         website: payload.website || null,
         phone: payload.phone || null,
+        categories: payload.categories,
         created_at: Date.now(),
       })
       .catch(e => {
@@ -182,6 +184,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
         },
         website: payload.website || null,
         phone: payload.phone || null,
+        categories: payload.categories,
         updated_at: Date.now(),
       })
       .catch(e => {
