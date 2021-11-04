@@ -14,6 +14,7 @@ import {
   // TUploadPictureFC,
   IAuth,
   IReset,
+  TUpdateUsernameFC,
 } from '../Interfaces/IAuthenticationContext';
 import { AlertContext } from './AlertContext';
 // import * as ImagePicker from 'expo-image-picker';
@@ -109,7 +110,7 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
       .auth()
       .signOut()
       .then(async () => {
-        setUser(null);
+        setUser(undefined);
         Alerts.success({
           title: 'See you soon !',
           message: '',
@@ -119,6 +120,27 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
         Alerts.warning({
           title: error.message,
           message: '',
+        });
+      });
+  };
+
+  const updateUsername: TUpdateUsernameFC = async payload => {
+    const tmpUser = await getUser();
+    tmpUser
+      ?.updateProfile({ displayName: payload })
+      .then(async () => {
+        Alerts.success({
+          title: 'Username successfully updated',
+          message: '',
+          duration: 4000,
+        });
+        setUser(await getUser());
+      })
+      .catch(() => {
+        Alerts.warning({
+          title: "Oops... It looks like your username was'nt update",
+          message: '',
+          duration: 4000,
         });
       });
   };
@@ -180,6 +202,7 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
         register,
         logout,
         resetpassword,
+        updateUsername,
         // uploadpicture,
         // takepicture,
         getUser,

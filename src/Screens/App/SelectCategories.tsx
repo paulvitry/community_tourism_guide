@@ -281,7 +281,6 @@ export const SelectCategories: React.FC<ISelectCategoriesProps> = ({
   useEffect(() => {
     (async () => {
       await getCategories();
-      // setSelectedCategories(route.params?.form.categories);
     })();
   }, []);
 

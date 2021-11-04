@@ -1,3 +1,4 @@
+import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
 import {
@@ -13,11 +14,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from '../../Components/TextInput';
 
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
-import { IReset } from '../../Interfaces/IAuthenticationContext';
 
 import { NavigationProps } from '../../Navigation/Navigation';
 
-type IResetPasswordProps = NavigationProps<'ResetPassword'>;
+type IModifyUsernameProps = NavigationProps<'ModifyUsername'>;
 
 const styles = StyleSheet.create({
   container: {
@@ -26,8 +26,6 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     flex: 0.1,
-    borderBottomWidth: 1,
-    borderColor: 'grey',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
@@ -37,12 +35,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
+  headerRow: {
+    width: '90%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   footer: {
     flex: 0.2,
     alignItems: 'center',
   },
   headerTitle: {
-    width: '90%',
     fontSize: 32,
     fontWeight: 'bold',
     color: 'white',
@@ -76,19 +79,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ResetPassword: React.FC<IResetPasswordProps> = ({
+export const ModifyUsername: React.FC<IModifyUsernameProps> = ({
   navigation,
 }) => {
-  const { resetpassword } = useContext(AuthenticationContext);
+  const { user, updateUsername } = useContext(AuthenticationContext);
+  const [username, setUsername] = useState<string>();
 
-  const [values, setValues] = useState<IReset>({
-    email: '',
-  });
+  const onBackClick = async () => {
+    navigation.goBack();
+  };
 
   const onClick = async () => {
-    console.log('sign in callback');
-    await resetpassword(values);
-    console.log('over');
+    await updateUsername(username!);
+    onBackClick();
   };
 
   return (
@@ -99,27 +102,32 @@ export const ResetPassword: React.FC<IResetPasswordProps> = ({
     >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Reset password</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerTitle}>Modify Username</Text>
+            <AntDesign
+              style={{ marginLeft: 15 }}
+              name="arrowleft"
+              size={24}
+              color="white"
+              onPress={() => onBackClick()}
+            />
+          </View>
         </View>
 
         <View style={styles.content}>
           <KeyboardAvoidingView>
             <TextInput
-              label="Email"
-              onChangeText={value => setValues({ email: value })}
-              keyboardType="email-address"
+              label="Username"
+              onChangeText={setUsername}
+              placeholder={user?.displayName}
+              defaultValue={user?.displayName}
             />
           </KeyboardAvoidingView>
         </View>
         <View style={styles.footer}>
-          <View style={styles.goBack}>
-            <Button
-              title="Go back!"
-              onPress={() => navigation.navigate('SignIn')}
-            />
-          </View>
+          <View style={styles.goBack}></View>
           <TouchableHighlight style={styles.actionButton} onPress={onClick}>
-            <Text style={styles.actionButtonText}>Reset Password</Text>
+            <Text style={styles.actionButtonText}>Save</Text>
           </TouchableHighlight>
         </View>
       </SafeAreaView>

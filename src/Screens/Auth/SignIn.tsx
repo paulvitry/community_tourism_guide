@@ -88,9 +88,9 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
   const { login } = useContext(AuthenticationContext);
   const [setEmail] = useState<string | undefined>(undefined);
   const [setPassword] = useState<string | undefined>(undefined);
-  const [values] = useState<IAuth>({
-    email: 'community-tourism@yopmail.com',
-    password: 'password',
+  const [values, setValues] = useState<IAuth>({
+    email: '',
+    password: '',
   });
 
   const onClick = async () => {
@@ -103,50 +103,50 @@ export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
       colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Sign In</Text>
-      </View>
-
-      <View style={styles.content}>
-        <KeyboardAvoidingView>
-          <TextInput
-            style={styles.textInput}
-            label="Email"
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.textInput}
-            label="Password"
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-
-          <TouchableHighlight
-            underlayColor="#DDDDDD"
-            style={styles.forgottenPassword}
-            onPress={() => navigation.push('ResetPassword')}
-          >
-            <Text style={styles.forgottenPasswordText}>
-              Forgotten password?
-            </Text>
-          </TouchableHighlight>
-        </KeyboardAvoidingView>
-      </View>
-      <View style={styles.footer}>
-        <View style={styles.signUp}>
-          <Text>No account yet?</Text>
-          <Button
-            title="Sign up!"
-            onPress={() => navigation.navigate('SignUp')}
-          />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Sign In</Text>
         </View>
-        <TouchableHighlight style={styles.actionButton} onPress={onClick}>
-          <Text style={styles.actionButtonText}>Sign In</Text>
-        </TouchableHighlight>
-      </View>
-    </SafeAreaView>
+
+        <View style={styles.content}>
+          <KeyboardAvoidingView>
+            <TextInput
+              label="Email"
+              defaultValue={values.email}
+              onChangeText={value => setValues({ ...values, email: value })}
+              keyboardType="email-address"
+            />
+            <TextInput
+              label="Password"
+              defaultValue={values.password}
+              onChangeText={value => setValues({ ...values, password: value })}
+              secureTextEntry
+            />
+
+            <TouchableHighlight
+              underlayColor="#DDDDDD"
+              style={styles.forgottenPassword}
+              onPress={() => navigation.push('ResetPassword')}
+            >
+              <Text style={styles.forgottenPasswordText}>
+                Forgotten password?
+              </Text>
+            </TouchableHighlight>
+          </KeyboardAvoidingView>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.signUp}>
+            <Text>No account yet?</Text>
+            <Button
+              title="Sign up!"
+              onPress={() => navigation.navigate('SignUp')}
+            />
+          </View>
+          <TouchableHighlight style={styles.actionButton} onPress={onClick}>
+            <Text style={styles.actionButtonText}>Sign In</Text>
+          </TouchableHighlight>
+        </View>
+      </SafeAreaView>
     </LinearGradient>
   );
 };

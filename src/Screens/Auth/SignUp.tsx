@@ -12,10 +12,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TextInput } from '../../Components/TextInput';
 
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
-import { IAuth } from '../../Interfaces/IAuthenticationContext';
+import { IRegister } from '../../Interfaces/IAuthenticationContext';
 
 import { NavigationProps } from '../../Navigation/Navigation';
 import { LinearGradient } from 'expo-linear-gradient';
+import { ScrollView } from 'native-base';
 
 type ISignUpProps = NavigationProps<'SignUp'>;
 
@@ -32,10 +33,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    flex: 0.7,
+    flex: 1,
     padding: '5%',
     justifyContent: 'center',
     backgroundColor: 'white',
+  
   },
   footer: {
     flex: 0.2,
@@ -78,18 +80,15 @@ const styles = StyleSheet.create({
 
 export const SignUp: React.FC<ISignUpProps> = ({ navigation }) => {
   const { register } = useContext(AuthenticationContext);
-
-  const [setEmail] = useState<string>(null);
-  const [setPassword] = useState<string>(null);
-  const [values] = useState<IAuth>({
-    email: 'community-tourism@yopmail.com',
-    password: 'password',
-    displayName: 'Paul',
+  const [form, setForm] = useState<IRegister>({
+    email: '',
+    password: '',
+    displayName: '',
   });
 
   const onClick = async () => {
     console.log('sign in callback');
-    await register(values);
+    await register(form);
     console.log('over');
   };
 
@@ -99,45 +98,47 @@ export const SignUp: React.FC<ISignUpProps> = ({ navigation }) => {
       colors={['#000000', '#000000', 'white', 'white']}
       style={{ flex: 1 }}
     >
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Sign Up</Text>
-      </View>
-
-      <View style={styles.content}>
-        <KeyboardAvoidingView>
-          <TextInput
-            style={styles.textInput}
-            label="Email"
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.textInput}
-            label="Username"
-            onChangeText={setPassword}
-          />
-          <TextInput
-            style={styles.textInput}
-            label="Password"
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-        </KeyboardAvoidingView>
-      </View>
-      <View style={styles.footer}>
-        <View style={styles.signUp}>
-          <Text>Already have an account?</Text>
-          <Button
-            title="Sign in!"
-            onPress={() => navigation.navigate('SignIn')}
-          />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Sign Up</Text>
         </View>
-        <TouchableHighlight style={styles.actionButton} onPress={onClick}>
-          <Text style={styles.actionButtonText}>Sign Up</Text>
-        </TouchableHighlight>
-      </View>
-    </SafeAreaView>
+        <KeyboardAvoidingView style={{ flex: 0.7 }}>
+          <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+            <View style={styles.content}>
+              <TextInput
+                label="Email"
+                defaultValue={form.email}
+                onChangeText={value => setForm({ ...form, email: value })}
+                keyboardType="email-address"
+              />
+              <TextInput
+                label="Username"
+                defaultValue={form.displayName}
+                onChangeText={value => setForm({ ...form, displayName: value })}
+              />
+              <TextInput
+                label="Password"
+                defaultValue={form.password}
+                onChangeText={value => setForm({ ...form, password: value })}
+                secureTextEntry
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+
+        <View style={styles.footer}>
+          <View style={styles.signUp}>
+            <Text>Already have an account?</Text>
+            <Button
+              title="Sign in!"
+              onPress={() => navigation.navigate('SignIn')}
+            />
+          </View>
+          <TouchableHighlight style={styles.actionButton} onPress={onClick}>
+            <Text style={styles.actionButtonText}>Sign Up</Text>
+          </TouchableHighlight>
+        </View>
+      </SafeAreaView>
     </LinearGradient>
   );
 };

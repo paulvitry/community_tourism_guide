@@ -98,7 +98,6 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
   const { getImage } = useContext(ImageContext);
   const { getPlaceById, deletePlace } = useContext(PlaceContext);
   const { deletePlaceFromList } = useContext(ListContext);
-  // const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (!place) {
@@ -106,7 +105,6 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
         setPlace(await getPlaceById(placeId!));
       })();
     }
-
     if (place?.picture && !image) {
       (async () => {
         setImage(await getImage({ path: 'images', url: place!.picture }));
@@ -117,6 +115,7 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
   const handleClick = () => {
     navigation.navigate('PlaceDetails', { data: place! });
   };
+
   const renderEdit = () => {
     return (
       <View style={styles.actionView}>

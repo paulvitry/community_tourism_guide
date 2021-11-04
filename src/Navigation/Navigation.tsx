@@ -21,19 +21,20 @@ import { PlaceDetails } from '../Screens/App/PlaceDetails';
 import { UserPlaces } from '../Screens/App/UserPlaces';
 import { UserLikes } from '../Screens/App/UserLikes';
 import { SelectCategories } from '../Screens/App/SelectCategories';
+import { ModifyUsername } from '../Screens/App/ModifyUsername';
 import { ICreatePlace, IEditPlace, IPlace } from '../Interfaces/IPlaceContext';
 import { IList } from '../Interfaces/IListContext';
 
 interface INavigationProps {}
 
 export type NavigationParamList = {
-  SignIn: React.FC;
-  SignUp: React.FC;
-  ResetPassword: React.FC;
+  SignIn: undefined;
+  SignUp: undefined;
+  ResetPassword: undefined;
   Home: undefined;
   Profile: React.FC;
   CreatePlace: { data: IPlace };
-  List: React.FC;
+  List: undefined;
   ListDetails: { list: IList };
   PlaceDetails: { data: IPlace };
   UserPlaces: React.FC;
@@ -42,6 +43,7 @@ export type NavigationParamList = {
     form: ICreatePlace | IEditPlace;
     setForm: React.Dispatch<React.SetStateAction<ICreatePlace | IEditPlace>>;
   };
+  ModifyUsername: React.FC;
 };
 
 // type TabParamList = {
@@ -95,6 +97,7 @@ export const Navigation: React.FC<INavigationProps> = () => {
           <Stack.Screen name="UserPlaces" component={UserPlaces} />
           <Stack.Screen name="UserLikes" component={UserLikes} />
           <Stack.Screen name="SelectCategories" component={SelectCategories} />
+          <Stack.Screen name="ModifyUsername" component={ModifyUsername} />
         </Stack.Navigator>
       ) : (
         // <Stack.Navigator

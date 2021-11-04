@@ -24,13 +24,27 @@ export const PlaceProvider: React.FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
   const [userPlaces, setUserPlaces] = useState<Array<IPlace>>();
 
-  const getPlaces: TGetPlacesFC = async () => {
+  const getPlaces: TGetPlacesFC = async payload => {
     console.log('getPlaces');
-    const tmpPlaces = await (
-      await firebase.firestore().collection('Places').get()
-    ).docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
-    });
+    let tmpPlaces;
+    if (!payload?.categories || payload.categories.length === 0) {
+      tmpPlaces = (
+        await firebase.firestore().collection('Places').get()
+      ).docs.map(doc => {
+        return { ...doc.data(), id: doc.id };
+      });
+    } else {
+      console.log('------------> Hello world from GetPlaces');
+      tmpPlaces = (
+        await firebase
+          .firestore()
+          .collection('Places')
+          .where('categories', 'array-contains-any', payload.categories)
+          .get()
+      ).docs.map(doc => {
+        return { ...doc.data(), id: doc.id };
+      });
+    }
     (async () => {
       setPlaces(undefined);
       setPlaces(tmpPlaces);

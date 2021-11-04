@@ -23,7 +23,7 @@ export const ImageProvider: React.FC = ({ children }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [5, 5],
-      quality: 1,
+      quality: 0.3,
     });
     if (result.cancelled) {
     }

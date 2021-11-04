@@ -63,7 +63,19 @@ export interface IEditPlace {
   categories: string[];
 }
 
-export type TGetPlacesFC = () => Promise<any>;
+export interface IFilterPlace {
+  title: string | undefined;
+  latitude: number | undefined;
+  longitude: number | undefined;
+  line1: string | undefined;
+  city: string | undefined;
+  postalCode: string | undefined;
+  country: string | undefined;
+  phone: string | undefined;
+  categories: string[];
+}
+
+export type TGetPlacesFC = (payload?: IFilterPlace) => Promise<any>;
 export type TCreatePlaceFC = (payload: ICreatePlace, setStep: React.Dispatch<React.SetStateAction<string>>) => Promise<any>;
 export type TEditPlaceFC = (payload: IEditPlace, setStep: React.Dispatch<React.SetStateAction<string>>) => Promise<any>;
 export type TGetPlaceByIdFC = (payload: string) => Promise<any>;

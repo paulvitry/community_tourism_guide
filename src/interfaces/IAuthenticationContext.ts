@@ -21,6 +21,7 @@ export interface IAuthenticationContext {
   // takepicture: TTakePictureFC;
   // uploadpicture: TUploadPictureFC;
   resetpassword: TResetPasswordFC;
+  updateUsername: TUpdateUsernameFC;
 }
 
 export type TLogoutFC = () => Promise<any>;
@@ -31,6 +32,7 @@ export type TGetUserFC = () => Promise<any>;
 export type TLoginFC = (payload: IAuth) => Promise<any>;
 export type TRegisterFC = (payload: IAuth) => Promise<any>;
 export type TResetPasswordFC = (payload: IReset) => Promise<any>;
+export type TUpdateUsernameFC = (payload: string) => Promise<any>;
 
 export const defaultAuthenticationValue: IAuthenticationContext = {
   user: undefined,
@@ -43,4 +45,5 @@ export const defaultAuthenticationValue: IAuthenticationContext = {
   // takepicture: () => Promise.reject(null),
   // uploadpicture: () => Promise.reject(null),
   resetpassword: () => Promise.reject(null),
+  updateUsername: () => Promise.reject(null),
 };

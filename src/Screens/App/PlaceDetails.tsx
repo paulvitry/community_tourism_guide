@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { IPlace } from '../../Interfaces/IPlaceContext';
 import { PlaceDetailsView } from '../../Components/PlaceDetailsView';
+import { AntDesign } from '@expo/vector-icons';
 
 type IPlaceDetailsProps = NavigationProps<'PlaceDetails'>;
 
@@ -42,7 +43,7 @@ export const PlaceDetails: React.FC<IPlaceDetailsProps> = ({
       <SafeAreaView
         style={styles.actions}
       >
-        <Button title="back" onPress={onClickBack} />
+        <AntDesign name="arrowleft" size={24} color="white" onPress={onClickBack} />
       </SafeAreaView>
     </View>
   );

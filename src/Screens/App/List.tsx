@@ -182,8 +182,8 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
     description: undefined,
   });
 
-  const onClickHome = () => {
-    navigation.navigate('Home');
+  const onClickBack = () => {
+    navigation.goBack();
   };
 
   const onClickAdd = () => {
@@ -228,6 +228,7 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
                 </TouchableHighlight>
               </View>
               <View style={mstyles.space} />
+
               <ScrollView style={{ width: '100%' }}>
                 <View style={{ width: '100%' }}>
                   <TextInput
@@ -287,7 +288,7 @@ export const List: React.FC<IListProps> = ({ navigation }) => {
                 name="arrowleft"
                 size={24}
                 color="white"
-                onPress={() => onClickHome()}
+                onPress={() => onClickBack()}
               />
             </View>
           </View>

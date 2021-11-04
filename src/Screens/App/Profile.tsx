@@ -13,7 +13,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NavigationParamList, NavigationProps } from '../../Navigation/Navigation';
+import {
+  NavigationParamList,
+  NavigationProps,
+} from '../../Navigation/Navigation';
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 import { ImageContext } from '../../Contexts/ImageContext';
 import { useStyledSystemPropsResolver } from 'native-base';
@@ -78,6 +81,10 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'black',
   },
+  username: {
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
   textInput: {
     backgroundColor: '#D4D4D4',
     height: 60,
@@ -87,7 +94,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   bgShape: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     borderColor: 'grey',
     backgroundColor: ACTION_BTN_BG,
     height: 80,
@@ -192,19 +199,23 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
   };
 
   const handleResetPwd = async () => {
-    Alert.alert('Are you sure you want to reset your password?', 'You will receive a link by email to set a new password.', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'Reset',
-        onPress: async () => {
-          await resetpassword({ email: user!.email });
+    Alert.alert(
+      'Are you sure you want to reset your password?',
+      'You will receive a link by email to set a new password.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: 'Reset',
+          onPress: async () => {
+            await resetpassword({ email: user!.email });
+          },
+        },
+      ],
+    );
   };
 
   const renderActions = () => {
@@ -220,12 +231,22 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.actionButton}
+          onPress={() => navigation.navigate('List')}
+        >
+          <Entypo name="list" size={24} color="white" />
+          <Text style={styles.textActions}>My lists</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.actionButton}
           onPress={() => navigation.navigate('UserLikes')}
         >
           <Entypo name="heart" size={24} color="white" />
           <Text style={styles.textActions}>Likes</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton}>
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => navigation.navigate('ModifyUsername')}
+        >
           <Entypo name="pencil" size={24} color="white" />
           <Text style={styles.textActions}>Modify username</Text>
         </TouchableOpacity>
@@ -269,7 +290,8 @@ export const Profile: React.FC<IProfileProps> = ({ navigation }) => {
             >
               <Image source={{ uri: image }} style={styles.image} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>{user!.displayName}</Text>
+            {console.log(user?.displayName)}
+            <Text style={styles.username}>{user?.displayName}</Text>
             <View style={{ height: 40 }} />
             {renderActions()}
           </View>

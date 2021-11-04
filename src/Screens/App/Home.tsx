@@ -8,6 +8,9 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -21,9 +24,19 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 import { PlaceDetailsView } from '../../Components/PlaceDetailsView';
-import { IPlace } from '../../Interfaces/IPlaceContext';
+import {
+  ICreatePlace,
+  IFilterPlace,
+  IPlace,
+} from '../../Interfaces/IPlaceContext';
 import { AddToListModal } from '../../Components/AddToListModal';
 import { LikeContext } from '../../Contexts/LikeContext';
+import { MapViewComponent } from '../../Components/MapView';
+import { PlaceListItem } from '../../Components/PlaceListItem';
+import { style } from 'styled-system';
+import { TextInput } from '../../Components/TextInput';
+import { Checkbox } from 'native-base';
+import { CategoryContext } from '../../Contexts/CategoryContext';
 
 type IHomeProps = NavigationProps<'Home'>;
 
@@ -40,11 +53,19 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  overlayActionContainer: {
+    flex: 1,
+    position: 'absolute',
+    alignSelf: 'flex-end',
+  },
   overlayContainer: {
     flex: 1,
     position: 'absolute',
-    // backgroundColor: 'red',
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-start',
+    backgroundColor: 'white',
+    width: '80%',
+    height: '100%',
+    padding: 10,
   },
   headActions: {
     // flexDirection: 'row',
@@ -61,22 +82,61 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: ACTION_BTN_BG,
   },
+  scrollView: {
+    flex: 1,
+  },
+  filter: {
+    height: 42,
+    justifyContent: 'flex-end',
+  },
+  scrollViewContent: {
+    marginVertical: 40,
+    alignItems: 'center',
+  },
+  filterTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 20,
+  },
+  filterText: {
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  actionFilter: {
+    padding: 5,
+    borderRadius: 20,
+    height: 40,
+    backgroundColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionTextFilter: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { places, getPlaces } = useContext(PlaceContext);
   const { getImage } = useContext(ImageContext);
   const [selectedMarker, setSelectedMarker] = useState<IPlace>();
-  // const [markers, setMarkers] = useState();
-  const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel | null>(
-    null,
-  );
-  // const { isLiked } = useContext(LikeContext);
-  // const [liked, setLiked] = useState<boolean>();
-
+  const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel>();
   const [allowDragging, setAllowDragging] = useState(true);
-  // const [animValue] = useState(new Animated.Value(0));
-  const panelRef = new Animated.Value(300);
+  const [isMapView, setIsMapView] = useState(true);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const { categories, getCategories } = useContext(CategoryContext);
+  const [selectedCategories, setSelectedCategories] = useState();
+  const [filterForm, setFilterForm] = useState<IFilterPlace>({
+    title: undefined,
+    latitude: undefined,
+    longitude: undefined,
+    line1: undefined,
+    city: undefined,
+    postalCode: undefined,
+    country: undefined,
+    phone: undefined,
+    categories: [],
+  });
   let animValue = new Animated.Value(0);
 
   const fetchData = async () => {
@@ -85,9 +145,8 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      // setMarkers(await getPlaces());
-      console.log('useEffect');
       await fetchData();
+      await getCategories();
     })();
   }, []);
 
@@ -103,28 +162,20 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     navigation.navigate('CreatePlace');
   };
 
-  // const onStartAnimation = async () => {
-  //   await Animated.timing(animValue, {
-  //     toValue: 300,
-  //     duration: 500,
-  //     useNativeDriver: false,
-  //   }).start();
-  // };
-
   const renderSlidingUpPanel = () => {
+    const { width, height } = Dimensions.get('window');
     return (
       <SlidingUpPanel
-        ref={c => setSlidingUpPanel(c)}
+        ref={(c: SlidingUpPanel) => setSlidingUpPanel(c)}
         animatedValue={animValue}
         snappingPoints={[300, 600]}
         backdropOpacity={0.1}
         allowDragging={allowDragging}
-        // draggableRange={{ top: wind, bottom: 0 }}
       >
         <View style={{ flex: 1 }}>
           <PlaceDetailsView
             place={selectedMarker!}
-            
+            // setAllowDragging={setAllowDragging!}
             // setModalVisible={setModalVisible}
           />
         </View>
@@ -132,77 +183,134 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        customMapStyle={NightMode}
-        provider={PROVIDER_GOOGLE}
-        userInterfaceStyle="dark"
-        showsUserLocation={true}
-        showsScale={true}
-        showsCompass={true}
-        showsMyLocationButton={true}
-        onLongPress={e => {
-          navigation.navigate('CreatePlace', {
-            coordinate: e.nativeEvent.coordinate,
-          });
-        }}
-      >
-        {/* {console.log('component refreshed')}
-        {console.log('places ->', places?.length)} */}
-        {places?.map((marker: any, index: number) => {
-          return (
-            <Marker
-              key={index}
-              coordinate={marker.coordinate}
-              title={marker.title}
-              description={marker.description}
-              onPress={async () => {
-                setSelectedMarker(undefined);
-                // setLiked(
-                //   await isLiked(marker.id),
-                // );
-                setSelectedMarker(marker);
-                console.log(animValue, ' && ', panelRef);
-                if (animValue !== panelRef) slidingUpPanel?.show(350);
-              }}
-            />
-          );
-        })}
-      </MapView>
-      {renderSlidingUpPanel()}
-
-      <SafeAreaView style={styles.overlayContainer}>
+  const renderActions = () => {
+    return (
+      <SafeAreaView style={styles.overlayActionContainer}>
         <View style={styles.headActions}>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={onClickProfile}
+            onPress={() => {
+              setIsFiltering(false);
+              onClickProfile();
+            }}
           >
             <EvilIcons name="user" size={40} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={onClickProfile}
+            onPress={() => setIsFiltering(!isFiltering)}
           >
             <Ionicons name="filter" size={24} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={onClickList}>
-            <Ionicons name="list" size={24} color="white" />
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={() => {
+              setIsFiltering(false);
+              setIsMapView(!isMapView);
+            }}
+          >
+            <Ionicons
+              name={isMapView ? 'list' : 'map'}
+              size={24}
+              color="white"
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={onClickAddPlace}
+            onPress={() => {
+              setIsFiltering(false);
+              onClickAddPlace();
+            }}
           >
             <Ionicons name="add" size={24} color="white" />
           </TouchableOpacity>
-
-          {/* <Button
-            title="dragging"
-            onPress={() => setAllowDragging(!allowDragging)}
-          /> */}
         </View>
       </SafeAreaView>
+    );
+  };
+
+  const renderFilterView = () => {
+    return (
+      <SafeAreaView style={styles.overlayContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+        >
+          <ScrollView style={{ flex: 1 }}>
+            <Text style={styles.filterTitle}>
+              What are you searching for...?
+            </Text>
+            <Checkbox.Group
+              onChange={cats =>
+                setFilterForm({ ...filterForm, categories: cats })
+              }
+              value={filterForm.categories}
+            >
+              {categories !== undefined && categories.length > 0 ? (
+                categories.map((category, index) => {
+                  return (
+                    <View key={index} style={{ marginBottom: 15 }}>
+                      <Checkbox value={category.title}>
+                        {category.title}
+                      </Checkbox>
+                    </View>
+                  );
+                })
+              ) : (
+                <View style={{}}>
+                  {console.log('should display non cat')}
+                  <Text style={{}}>There is no category yet.</Text>
+                </View>
+              )}
+            </Checkbox.Group>
+          </ScrollView>
+        </KeyboardAvoidingView>
+
+        <View style={styles.filter}>
+          <TouchableOpacity
+            style={styles.actionFilter}
+            onPress={async () => {
+              console.log('------------------> Hello world from Home/filter');
+              console.log('filterFrom=', filterForm);
+              setIsFiltering(false);
+              await getPlaces(filterForm);
+            }}
+          >
+            <Text style={styles.actionTextFilter}>Filter</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {isMapView ? (
+        <View>
+          <MapViewComponent
+            setSelectedMarker={setSelectedMarker}
+            slidingUpPanel={slidingUpPanel!}
+            navigation={navigation}
+          />
+          {renderSlidingUpPanel()}
+        </View>
+      ) : (
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.scrollViewContent}>
+            {places?.map((place, index) => {
+              return (
+                <PlaceListItem
+                  data={place}
+                  key={index}
+                  navigation={navigation}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
+      )}
+      {isFiltering && renderFilterView()}
+      {renderActions()}
     </View>
   );
 };

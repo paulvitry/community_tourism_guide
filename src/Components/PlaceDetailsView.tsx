@@ -19,6 +19,7 @@ import { AddToListModal } from './AddToListModal';
 
 interface IPlaceDetailsViewProps {
   place: IPlace;
+  setAllowDragging?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const styles = StyleSheet.create({
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
 
 export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
   place,
+  setAllowDragging = undefined,
 }) => {
   const [image, setImage] = useState(null);
   const { getImage } = useContext(ImageContext);
@@ -219,11 +221,37 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
       {place! && (
         <View>
           <Image style={styles.image} source={{ uri: image! }} />
-          <ScrollView style={styles.scrollView}>
+          <ScrollView
+            style={styles.scrollView}
+            onTouchStart={() => {
+              console.log('begin scroll');
+              if (setAllowDragging !== undefined)
+                setAllowDragging!(false);
+            }}
+            onTouchEnd={() => {
+              if (setAllowDragging !== undefined)
+                setAllowDragging!(true);
+            }}
+          >
             <View style={styles.content}>
               <Text style={styles.title}>{place.title}</Text>
               <Text>{place.description}</Text>
             </View>
+            <View style={styles.divider} />
+
+            {place?.categories && (
+              <View style={styles.content}>
+                <View style={styles.badges}>
+                  {place?.categories!.map((category, index) => {
+                    return (
+                      <View key={index} style={styles.badge}>
+                        <Text style={{ color: 'white' }}>{category}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
             <View style={styles.divider} />
             <View style={styles.contentAction}>
               <TouchableOpacity style={styles.action} onPress={openGps}>
@@ -255,20 +283,7 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
               </TouchableOpacity>
             </View>
             <View style={styles.divider} />
-            {place?.categories && (
-              <View style={styles.content}>
-                <View style={styles.badges}>
-                  {place?.categories!.map((category, index) => {
-                    return (
-                      <View key={index} style={styles.badge}>
-                        <Text style={{ color: 'white' }}>{category}</Text>
-                      </View>
-                    );
-                  })}
-                </View>
-              </View>
-            )}
-            <View style={styles.divider} />
+            
             <View style={styles.content}>
               <TouchableOpacity style={styles.infos} onPress={openGps}>
                 <Entypo name="location-pin" size={24} color="blue" />
