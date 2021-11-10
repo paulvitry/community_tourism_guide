@@ -1,9 +1,6 @@
 import React from 'react';
 import {
   StyleSheet,
-  View,
-  Text,
-  TextInput as TI,
   KeyboardTypeOptions,
 } from 'react-native';
 import { FormControl, Input } from 'native-base';

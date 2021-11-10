@@ -5,36 +5,24 @@ import {
   Text,
   Dimensions,
   Animated,
-  Image,
   TouchableOpacity,
-  Button,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { NavigationProps } from '../../Navigation/Navigation';
-import { NightMode } from '../../Styling/Map/NightMode';
-import { ImageContext } from '../../Contexts/ImageContext';
 import { PlaceContext } from '../../Contexts/PlaceContext';
 import SlidingUpPanel from 'rn-sliding-up-panel';
-import { Entypo } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 import { PlaceDetailsView } from '../../Components/PlaceDetailsView';
 import {
-  ICreatePlace,
   IFilterPlace,
   IPlace,
 } from '../../Interfaces/IPlaceContext';
-import { AddToListModal } from '../../Components/AddToListModal';
-import { LikeContext } from '../../Contexts/LikeContext';
 import { MapViewComponent } from '../../Components/MapView';
 import { PlaceListItem } from '../../Components/PlaceListItem';
-import { style } from 'styled-system';
-import { TextInput } from '../../Components/TextInput';
 import { Checkbox } from 'native-base';
 import { CategoryContext } from '../../Contexts/CategoryContext';
 
@@ -118,14 +106,12 @@ const styles = StyleSheet.create({
 
 export const Home: React.FC<IHomeProps> = ({ navigation }) => {
   const { places, getPlaces } = useContext(PlaceContext);
-  const { getImage } = useContext(ImageContext);
   const [selectedMarker, setSelectedMarker] = useState<IPlace>();
   const [slidingUpPanel, setSlidingUpPanel] = useState<SlidingUpPanel>();
-  const [allowDragging, setAllowDragging] = useState(true);
+  const [allowDragging] = useState(true);
   const [isMapView, setIsMapView] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const { categories, getCategories } = useContext(CategoryContext);
-  const [selectedCategories, setSelectedCategories] = useState();
   const [filterForm, setFilterForm] = useState<IFilterPlace>({
     title: undefined,
     latitude: undefined,
@@ -154,16 +140,11 @@ export const Home: React.FC<IHomeProps> = ({ navigation }) => {
     navigation.navigate('Profile');
   };
 
-  const onClickList = () => {
-    navigation.navigate('List');
-  };
-
   const onClickAddPlace = () => {
     navigation.navigate('CreatePlace');
   };
 
   const renderSlidingUpPanel = () => {
-    const { width, height } = Dimensions.get('window');
     return (
       <SlidingUpPanel
         ref={(c: SlidingUpPanel) => setSlidingUpPanel(c)}

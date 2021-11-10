@@ -1,17 +1,16 @@
 import React, { useContext, useEffect } from 'react';
-import { StyleSheet, View, Text, Button, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
 import { PlaceListItem } from '../../Components/PlaceListItem';
-import { PlaceContext } from '../../Contexts/PlaceContext';
 import { LikeContext } from '../../Contexts/LikeContext';
 import { AntDesign } from '@expo/vector-icons';
 // import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#000000';
 
-type IUserLikesProps = NavigationProps<'List'>;
+type IUserLikesProps = NavigationProps<'UserLikes'>;
 
 const styles = StyleSheet.create({
   container: {

@@ -86,8 +86,6 @@ const styles = StyleSheet.create({
 
 export const SignIn: React.FC<ISignInProps> = ({ navigation }) => {
   const { login } = useContext(AuthenticationContext);
-  const [setEmail] = useState<string | undefined>(undefined);
-  const [setPassword] = useState<string | undefined>(undefined);
   const [values, setValues] = useState<IAuth>({
     email: '',
     password: '',

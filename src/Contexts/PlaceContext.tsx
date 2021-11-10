@@ -14,7 +14,6 @@ import {
 import firebase from '../Database/firebase';
 import { AuthenticationContext } from './AuthenticationContext';
 import { AlertContext } from './AlertContext';
-import { SelectCategories } from '../Screens/App/SelectCategories';
 
 export const PlaceContext = createContext<IPlaceContext>(defaultPlaceValue);
 
@@ -24,6 +23,22 @@ export const PlaceProvider: React.FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
   const [userPlaces, setUserPlaces] = useState<Array<IPlace>>();
 
+  const setPlace = (data: firebase.firestore.DocumentData, id: string) => {
+    const place: IPlace = {
+      id: id,
+      title: data.title,
+      description: data.description,
+      picture: data.picture,
+      creator: data.creator,
+      coordinate: data.coordinate,
+      location: data.location,
+      website: data.website,
+      phone: data.phone,
+      categories: data.categories,
+    };
+    return place;
+  };
+
   const getPlaces: TGetPlacesFC = async payload => {
     console.log('getPlaces');
     let tmpPlaces;
@@ -31,7 +46,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
       tmpPlaces = (
         await firebase.firestore().collection('Places').get()
       ).docs.map(doc => {
-        return { ...doc.data(), id: doc.id };
+        return setPlace(doc.data(), doc.id);
       });
     } else {
       console.log('------------> Hello world from GetPlaces');
@@ -42,7 +57,7 @@ export const PlaceProvider: React.FC = ({ children }) => {
           .where('categories', 'array-contains-any', payload.categories)
           .get()
       ).docs.map(doc => {
-        return { ...doc.data(), id: doc.id };
+        return setPlace(doc.data(), doc.id);
       });
     }
     (async () => {
@@ -58,7 +73,8 @@ export const PlaceProvider: React.FC = ({ children }) => {
       .collection('Places')
       .doc(payload)
       .get();
-    const place: IPlace = { ...snapshot.data(), id: snapshot.id };
+
+    const place: IPlace = setPlace(snapshot.data()!, snapshot.id);
     console.log('place: ', place);
 
     // const doc = snapshot.docs.map(doc => {
@@ -139,10 +155,9 @@ export const PlaceProvider: React.FC = ({ children }) => {
       .where('creator', '==', user?.id)
       .get();
 
-    const tmpPlaces: IPlace = snapshot.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+    const tmpPlaces = snapshot.docs.map(doc => {
+      return setPlace(doc.data(), doc.id);
     });
-    console.log('tmpPlaces = ', tmpPlaces);
     setUserPlaces(tmpPlaces);
     return tmpPlaces;
   };

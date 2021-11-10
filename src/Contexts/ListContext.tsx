@@ -25,9 +25,19 @@ export const ListProvider: React.FC = ({ children }) => {
   const [lists, setLists] = useState<Array<IList> | undefined>();
   const { user } = useContext(AuthenticationContext);
 
-  const getLists: TGetListsFC = async () => {
-    console.log('getLists');
+  const setList = (data: firebase.firestore.DocumentData, id: string) => {
+    const list: IList = {
+      title: data.title,
+      description: data.description,
+      id: id,
+      creator: data.creator,
+      created_at: data.created_at,
+      places: data.palces,
+    };
+    return list;
+  };
 
+  const getLists: TGetListsFC = async () => {
     const snapshot = await firebase
       .firestore()
       .collection('Lists')
@@ -35,26 +45,20 @@ export const ListProvider: React.FC = ({ children }) => {
       .get();
 
     const tmpLists = snapshot.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+      return setList(doc.data(), doc.id);
     });
-
     setLists(tmpLists);
-    console.log('lists: ', tmpLists);
     return tmpLists;
   };
 
   const getListById: TGetListByIdFC = async payload => {
-    console.log('getLists');
-
     const snapshot = await firebase
       .firestore()
       .collection('Lists')
       .doc(payload)
       .get();
 
-    const tmpList = { id: snapshot.id, ...snapshot.data() };
-
-    console.log('lists: ', tmpList);
+    const tmpList = setList(snapshot.data()!, snapshot.id);
     return tmpList;
   };
 

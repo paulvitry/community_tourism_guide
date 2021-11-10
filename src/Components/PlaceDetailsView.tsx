@@ -315,7 +315,6 @@ export const PlaceDetailsView: React.FC<IPlaceDetailsViewProps> = ({
                   {place?.phone ? place?.phone : 'No phone number was filled.'}
                 </Text>
               </TouchableOpacity>
-              <Text>{place.id}</Text>
             </View>
             <View style={{ height: 100, width: '100%' }} />
             <View style={{ height: 100, width: '100%' }} />

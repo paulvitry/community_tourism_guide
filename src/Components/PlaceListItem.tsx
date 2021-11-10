@@ -79,7 +79,7 @@ interface IPlaceListItemProps {
   placeId?: string;
   data?: IPlace;
   key: number;
-  navigation: NativeStackNavigationProp<NavigationParamList>;
+  navigation: NativeStackNavigationProp<NavigationParamList, 'UserPlaces' | 'ListDetails' | 'Home' | 'UserLikes'>;
   canEdit?: boolean;
   listId?: string;
   setShouldReload?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -105,6 +105,7 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
         setPlace(await getPlaceById(placeId!));
       })();
     }
+
     if (place?.picture && !image) {
       (async () => {
         setImage(await getImage({ path: 'images', url: place!.picture }));
@@ -115,13 +116,13 @@ export const PlaceListItem: React.FC<IPlaceListItemProps> = ({
   const handleClick = () => {
     navigation.navigate('PlaceDetails', { data: place! });
   };
-
+  
   const renderEdit = () => {
     return (
       <View style={styles.actionView}>
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => navigation.navigate('CreatePlace', { data: place! })}
+          onPress={() => navigation.navigate('CreatePlace', { data: place!, type: 'edit' })}
         >
           <AntDesign name="edit" size={24} color="black" />
         </TouchableOpacity>

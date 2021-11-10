@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { StyleSheet, View, Text, Button, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProps } from '../../Navigation/Navigation';
@@ -10,7 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 const ACTION_BTN_BG = '#000000';
 
-type IUserPlacesProps = NavigationProps<'List'>;
+type IUserPlacesProps = NavigationProps<'UserPlaces'>;
 
 const styles = StyleSheet.create({
   container: {
@@ -145,7 +145,7 @@ export const UserPlaces: React.FC<IUserPlacesProps> = ({
           <View style={styles.content}>
             {userPlaces ? (
               userPlaces?.map((place, index: number) => {
-                console.log('userPLaces should map : ', userPlaces);
+                console.log('userPlaces should map : ', userPlaces);
                 return (
                   <PlaceListItem
                     data={place}

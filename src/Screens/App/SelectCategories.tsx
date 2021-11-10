@@ -3,15 +3,12 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   TouchableHighlight,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator,
   Modal,
   Alert,
-  CheckBox,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -19,7 +16,6 @@ import { AntDesign, Entypo } from '@expo/vector-icons';
 import { CategoryContext } from '../../Contexts/CategoryContext';
 import { TextInput } from '../../Components/TextInput';
 import { Checkbox } from 'native-base';
-import { setStatusBarBackgroundColor } from 'expo-status-bar';
 import { NavigationProps } from '../../Navigation/Navigation';
 
 const ACTION_BTN_BG = '#000000';

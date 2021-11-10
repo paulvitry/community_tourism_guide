@@ -18,7 +18,7 @@ import { NavigationProps } from '../../Navigation/Navigation';
 import { ImageContext } from './../../Contexts/ImageContext';
 import { PlaceContext } from './../../Contexts/PlaceContext';
 import { AuthenticationContext } from './../../Contexts/AuthenticationContext';
-import { ICreatePlace, IEditPlace } from '../../Interfaces/IPlaceContext';
+import { ICreatePlace, IEditPlace, IPlace } from '../../Interfaces/IPlaceContext';
 // import { ImageBrowser } from 'expo-image-picker-multiple';
 import { TextInput } from '../../Components/TextInput';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -190,29 +190,31 @@ export const CreatePlace: React.FC<ICreatePlaceProps> = ({
 
   useEffect(() => {
     console.log('---------------> here');
-    if (route.params?.data) {
+    if (route.params?.type === 'edit') {
+      const data: IPlace = route.params.data;
       console.log('-----------------> data');
       setForm({
-        ...route.params?.data,
-        latitude: route.params?.data?.coordinate?.latitude,
+        ...form,
+        ...data,
+        latitude: route.params.data.coordinate.latitude,
         longitude: route.params?.data?.coordinate?.longitude,
-        line1: route.params?.data?.location?.line1,
-        city: route.params?.data?.location?.city,
-        postalCode: route.params?.data?.location?.postalCode,
-        country: route.params?.data?.location?.country,
+        // line1: route.params?.data?.location?.line1,
+        // city: route.params?.data?.location?.city,
+        // postalCode: route.params?.data?.location?.postalCode,
+        // country: route.params?.data?.location?.country,
       });
       (async () => {
         setSelectedPicture(undefined);
         setExistingImage(
-          await getImage({ path: 'images', url: route.params.data?.picture! }),
+          await getImage({ path: 'images', url: route.params?.data?.picture! }),
         );
       })();
-    } else if (route.params?.coordinate!) {
+    } else if (route.params?.type === 'coordinate') {
       setForm({
         ...form,
         creator: user?.id,
-        longitude: route.params.coordinate.longitude,
-        latitude: route.params.coordinate.latitude,
+        longitude: route.params.data.coordinate.longitude,
+        latitude: route.params.data.coordinate.latitude,
       });
     } else {
       setForm({ ...form, creator: user?.id });

@@ -4,7 +4,6 @@ import React, { useContext, useState } from 'react';
 import {
   StyleSheet,
   Text,
-  Button,
   View,
   // TextInput,
   TouchableHighlight,

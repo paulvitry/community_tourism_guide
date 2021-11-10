@@ -20,12 +20,21 @@ export const CategoryProvider: React.FC = ({ children }) => {
   const { user } = useContext(AuthenticationContext);
   const [userCategories] = useState<Array<ICategory>>();
 
+  const setCategory = (data: firebase.firestore.DocumentData, id: string) => {
+    const cat: ICategory = {
+      id: id,
+      title: data.title,
+      creator: data.creator,
+    };
+    return cat;
+  };
+
   const getCategories: TGetCategoriesFC = async () => {
     console.log('getCategories');
     const tmpCategories = await (
       await firebase.firestore().collection('Categories').get()
     ).docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+      return setCategory(doc.data(), doc.id);
     });
     console.log('tmpCategories: ', tmpCategories);
     (async () => {

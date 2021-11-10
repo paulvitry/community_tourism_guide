@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/core';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useContext } from 'react';
 import { Animated, Dimensions, StyleSheet } from 'react-native';
@@ -30,7 +29,7 @@ export const MapViewComponent: React.FC<IMapViewComponentProps> = ({
   slidingUpPanel,
   navigation,
 }) => {
-  const { places, getPlaces } = useContext(PlaceContext);
+  const { places } = useContext(PlaceContext);
   let animValue = new Animated.Value(0);
   const panelRef = new Animated.Value(300);
 
@@ -39,7 +38,7 @@ export const MapViewComponent: React.FC<IMapViewComponentProps> = ({
       style={styles.map}
       customMapStyle={NightMode}
       provider={PROVIDER_GOOGLE}
-      userInterfaceStyle="dark"
+    //   userInterfaceStyle="dark"
       showsUserLocation={true}
       showsScale={true}
       showsCompass={true}
@@ -47,7 +46,24 @@ export const MapViewComponent: React.FC<IMapViewComponentProps> = ({
       onLongPress={e => {
         console.log(e);
         navigation.navigate('CreatePlace', {
-          coordinate: e.nativeEvent.coordinate,
+          data: {
+            coordinate: e.nativeEvent.coordinate,
+            id: '',
+            title: '',
+            description: '',
+            picture: '',
+            creator: '',
+            location: {
+              line1: undefined,
+              city: undefined,
+              postalCode: undefined,
+              country: undefined,
+            },
+            website: undefined,
+            phone: undefined,
+            categories: [],
+          },
+          type: 'coordinate',
         });
       }}
     >

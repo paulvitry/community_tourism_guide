@@ -4,7 +4,6 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AuthenticationContext } from '../Contexts/AuthenticationContext';
@@ -32,18 +31,19 @@ export type NavigationParamList = {
   SignUp: undefined;
   ResetPassword: undefined;
   Home: undefined;
-  Profile: React.FC;
-  CreatePlace: { data: IPlace };
+  Profile: undefined;
+  // | { coordinate: { longitude: number; latitude: number } 
+  CreatePlace: undefined | { data: IPlace, type: 'edit' | 'coordinate' | 'none' };
   List: undefined;
   ListDetails: { list: IList };
   PlaceDetails: { data: IPlace };
-  UserPlaces: React.FC;
-  UserLikes: React.FC;
+  UserPlaces: undefined;
+  UserLikes: undefined;
   SelectCategories: {
     form: ICreatePlace | IEditPlace;
     setForm: React.Dispatch<React.SetStateAction<ICreatePlace | IEditPlace>>;
   };
-  ModifyUsername: React.FC;
+  ModifyUsername: undefined;
 };
 
 // type TabParamList = {

@@ -10,9 +10,6 @@ import {
   TLogoutFC,
   TRegisterFC,
   TResetPasswordFC,
-  // TTakePictureFC,
-  // TUploadPictureFC,
-  IAuth,
   IReset,
   TUpdateUsernameFC,
 } from '../Interfaces/IAuthenticationContext';
@@ -83,7 +80,7 @@ export const AuthenticationProvider: React.FC = ({ children }) => {
     }
   };
 
-  const register: TRegisterFC = async (payload: IAuth) => {
+  const register: TRegisterFC = async (payload) => {
     await firebase
       .auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)

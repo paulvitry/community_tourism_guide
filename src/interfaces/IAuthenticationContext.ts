@@ -5,6 +5,12 @@ export interface IAuth {
   password: string
 }
 
+export interface IRegister {
+  email: string,
+  password: string,
+  displayName: string,
+}
+
 export interface IReset {
   email: string;
 }
@@ -30,7 +36,7 @@ export type TGetUserFC = () => Promise<any>;
 // export type TTakePictureFC = () => Promise<any>;
 // export type TUploadPictureFC = () => Promise<any>;
 export type TLoginFC = (payload: IAuth) => Promise<any>;
-export type TRegisterFC = (payload: IAuth) => Promise<any>;
+export type TRegisterFC = (payload: IRegister) => Promise<any>;
 export type TResetPasswordFC = (payload: IReset) => Promise<any>;
 export type TUpdateUsernameFC = (payload: string) => Promise<any>;
 

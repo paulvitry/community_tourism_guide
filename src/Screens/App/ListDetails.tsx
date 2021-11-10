@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   ScrollView,
   Alert,
 } from 'react-native';
@@ -17,7 +16,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 const ACTION_BTN_BG = '#000000';
 
-type IListDetailsProps = NavigationProps<'List'>;
+type IListDetailsProps = NavigationProps<'ListDetails'>;
 
 const styles = StyleSheet.create({
   container: {
@@ -131,7 +130,7 @@ export const ListDetails: React.FC<IListDetailsProps> = ({
         text: 'Delete',
         onPress: async () => {
           console.log('over');
-          await deleteList(list?.id);
+          await deleteList(list?.id!);
           onClickBack();
         },
       },

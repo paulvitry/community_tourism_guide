@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Button,
   TouchableOpacity,
   Image,
   ScrollView,
@@ -14,14 +13,10 @@ import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  NavigationParamList,
   NavigationProps,
 } from '../../Navigation/Navigation';
 import { AuthenticationContext } from '../../Contexts/AuthenticationContext';
 import { ImageContext } from '../../Contexts/ImageContext';
-import { useStyledSystemPropsResolver } from 'native-base';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-// import firebase from '../../database/firebase';
 
 const ACTION_BTN_BG = '#000000';
 

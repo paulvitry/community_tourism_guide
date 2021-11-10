@@ -12,14 +12,22 @@ import {
 
 import firebase from '../Database/firebase';
 import { AuthenticationContext } from './AuthenticationContext';
-import { AlertContext } from './AlertContext';
 
 export const LikeContext = createContext<ILikeContext>(defaultLikeValue);
 
 export const LikeProvider: React.FC = ({ children }) => {
-  const { Alerts } = useContext(AlertContext);
   const { user } = useContext(AuthenticationContext);
   const [userLikes, setUserLikes] = useState<Array<ILike>>();
+
+  const setLike = (data: firebase.firestore.DocumentData, id: string) => {
+    const like: ILike = {
+      id: id,
+      postId: data.postId,
+      userId: data.userId,
+      postType: data.postType,
+    };
+    return like;
+  };
 
   const getUserLikes: TGetUserLikesFC = async () => {
     const snapshot = await firebase
@@ -28,8 +36,8 @@ export const LikeProvider: React.FC = ({ children }) => {
       .where('userId', '==', user?.id)
       .get();
 
-    const tmpLikes: ILike = snapshot.docs.map(doc => {
-      return { ...doc.data(), id: doc.id };
+    const tmpLikes = snapshot.docs.map(doc => {
+      return setLike(doc.data(), doc.id);
     });
     setUserLikes(tmpLikes);
     return tmpLikes;

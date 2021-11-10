@@ -1,11 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   StyleSheet,
   View,
   Text,
-  TextInput as TI,
-  KeyboardTypeOptions,
-  Image,
   TouchableOpacity,
   Modal,
   Alert,
@@ -13,13 +10,9 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import { AntDesign, Entypo } from '@expo/vector-icons';
-import SlidingUpPanel from 'rn-sliding-up-panel';
-import { ImageContext } from '../Contexts/ImageContext';
 import { ListContext } from '../Contexts/ListContext';
 import { IList } from '../Interfaces/IListContext';
 import { IPlace } from '../Interfaces/IPlaceContext';
-
-const ACTION_BTN_BG = '#000000';
 
 interface IAddToListModalProps {
   place: IPlace | undefined;

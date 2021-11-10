@@ -76,8 +76,8 @@ export interface IFilterPlace {
 }
 
 export type TGetPlacesFC = (payload?: IFilterPlace) => Promise<any>;
-export type TCreatePlaceFC = (payload: ICreatePlace, setStep: React.Dispatch<React.SetStateAction<string>>) => Promise<any>;
-export type TEditPlaceFC = (payload: IEditPlace, setStep: React.Dispatch<React.SetStateAction<string>>) => Promise<any>;
+export type TCreatePlaceFC = (payload: ICreatePlace, setStep: React.Dispatch<React.SetStateAction<string | undefined>>) => Promise<any>;
+export type TEditPlaceFC = (payload: IEditPlace | ICreatePlace, setStep: React.Dispatch<React.SetStateAction<string | undefined>>) => Promise<any>;
 export type TGetPlaceByIdFC = (payload: string) => Promise<any>;
 export type TGetUserPlacesFC = () => Promise<any>;
 export type TDeletePlaceFC = (payload: string) => Promise<any>;
